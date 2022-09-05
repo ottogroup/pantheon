@@ -61,7 +61,7 @@ On org level
 ```bash
 module "pantheon_gcp_permission" {
     source = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.0.0"
-    pantheon_engine_role_id = pantheon_gcp_org.output.pantheon_engine_role_id
+    pantheon_engine_role_id = module.pantheon_gcp_org.pantheon_engine_role_id
     org_id = "123456789"
     pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }

@@ -6,7 +6,7 @@ variable "org_id" {
 
 variable "folder_ids" {
   type        = list(string)
-  default     = null
+  default     = []
   description = "Optional: The ID of a folder you want to attach the permissions to. Per default, the permissions will be granted on the org level. The format for each element is folders/{folder_id}."
 }
 
