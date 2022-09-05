@@ -1,14 +1,9 @@
-locals {
-  is_folder_level = var.folder_id != null
-  is_org_level    = var.folder_id == null
-}
-
 # special permissions that are not part of the managed viewer roles
-resource "google_organization_iam_custom_role" "pantheon_extra_permissions" {
+resource "google_organization_iam_custom_role" "pantheon_engine_permissions" {
   org_id      = var.org_id
   role_id     = "pantheonextra"
-  title       = "Pantheon Extra Permissions"
-  description = "Permissions for Pantheon that are not part of managed viewer roles."
+  title       = "Pantheon Engine"
+  description = "Permissions for Pantheon Engine that are not part of GCP managed viewer roles."
   permissions = [
     "cloudasset.feeds.get",
     "source.repos.getProjectConfig",
