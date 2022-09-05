@@ -45,6 +45,6 @@ resource "google_organization_iam_member" "bigquery_metadata_viewer" {
 resource "google_organization_iam_member" "pantheon_custom" {
   count  = local.is_org_level ? 1 : 0
   org_id = var.org_id
-  role   = google_organization_iam_custom_role.pantheon_extra_permissions.id
+  role   = var.pantheon_engine_role_id
   member = "serviceAccount:${var.pantheon_service_account}"
 }
