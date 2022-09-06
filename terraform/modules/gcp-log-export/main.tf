@@ -78,8 +78,6 @@ resource "google_logging_folder_sink" "this" {
   name             = random_id.sink_name.hex
   filter           = local.filter
   include_children = true
-
-  depends_on = [google_project_service.logging]
 }
 
 resource "google_logging_organization_sink" "this" {
@@ -89,6 +87,4 @@ resource "google_logging_organization_sink" "this" {
   name             = random_id.sink_name.hex
   filter           = local.filter
   include_children = true
-
-  depends_on = [google_project_service.logging]
 }
