@@ -46,7 +46,7 @@ resource "google_folder_iam_member" "bigquery_metadata_viewer" {
 resource "google_folder_iam_member" "firebase_viewer" {
   for_each = toset(var.folder_ids)
   folder   = each.key
-  role     = "roles/firebase.viewer "
+  role     = "roles/firebase.viewer"
   member   = "serviceAccount:${var.pantheon_service_account}"
 }
 

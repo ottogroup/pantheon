@@ -46,7 +46,7 @@ resource "google_organization_iam_member" "bigquery_metadata_viewer" {
 resource "google_organization_iam_member" "firebase_viewer" {
   count  = local.is_org_level ? 1 : 0
   org_id = var.org_id
-  role   = "roles/firebase.viewer "
+  role   = "roles/firebase.viewer"
   member = "serviceAccount:${var.pantheon_service_account}"
 }
 
