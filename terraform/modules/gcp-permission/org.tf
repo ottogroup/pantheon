@@ -42,6 +42,14 @@ resource "google_organization_iam_member" "bigquery_metadata_viewer" {
   member = "serviceAccount:${var.pantheon_service_account}"
 }
 
+# for storage.buckets.get
+resource "google_organization_iam_member" "firebase_viewer" {
+  count  = local.is_org_level ? 1 : 0
+  org_id = var.org_id
+  role   = "roles/firebase.viewer "
+  member = "serviceAccount:${var.pantheon_service_account}"
+}
+
 resource "google_organization_iam_member" "pantheon_custom" {
   count  = local.is_org_level ? 1 : 0
   org_id = var.org_id
