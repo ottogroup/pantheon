@@ -18,7 +18,7 @@ On folder level
 ```bash
 module "pantheon_gcp_folder_log_export" {
     source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.0.1"
-    destination_uri = "projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
+    destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
     parent_resource_type = "folder"
     parent_resource_id = "123456789"
 }
@@ -28,7 +28,7 @@ On organization level
 ```bash
 module "pantheon_gcp_org_log_export" {
     source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.0.1"
-    destination_uri = "projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
+    destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
     parent_resource_type = "organization"
     parent_resource_id = "123456789"
 }
