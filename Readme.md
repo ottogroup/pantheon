@@ -67,6 +67,15 @@ module "pantheon_gcp_permission" {
 }
 ```
 
+### Module `gcp-billing` usage
+
+```bash
+module "pantheon_gcp_billing" {
+    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-billing?ref=v1.0.1"
+    billing_account_id = "00AA00-000AAA-00AA0A"
+    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
+}
+```
 
 ## Versioning
 
