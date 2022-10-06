@@ -51,7 +51,7 @@ On folder level
 ```bash
 module "pantheon_gcp_permission" {
     source = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.0.3"
-    pantheon_engine_role_id = pantheon_gcp_org.output.pantheon_engine_role_id
+    pantheon_engine_role_id = module.pantheon_gcp_org.output.pantheon_engine_role_id
     folder_ids = ["123456789", "987654321"]
     pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
