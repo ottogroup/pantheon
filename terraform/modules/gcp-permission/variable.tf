@@ -1,18 +1,18 @@
 variable "org_id" {
   type        = string
   default     = null
-  description = "The ID of the organization that owns the resources that you want to scan."
+  description = "The ID of the organization that owns the resources that you want to scan. Needs to be set by user."
 }
 
 variable "folder_ids" {
   type        = list(string)
   default     = []
-  description = "Optional: The ID of a folder you want to attach the permissions to. Per default, the permissions will be granted on the org level. The format for each element is folders/{folder_id}."
+  description = "Optional: The ID of a folder you want to attach the permissions to. Per default, the permissions will be granted on the org level. The format for each element is folders/{folder_id}. Needs to be set by user."
 }
 
 variable "pantheon_engine_role_id" {
   type        = string
-  description = "The ID of org level custom role of Pantheon Engine."
+  description = "The ID of org level custom role of Pantheon Engine. Will be provided by output of gcp-org module."
 }
 
 variable "pantheon_service_account" {

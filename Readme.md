@@ -8,6 +8,7 @@ This repository contains the following terraform modules
 - gcp-log-export: Provides log-export on folder or organization level
 - gcp-org: Provides resources on organization level, e.g. custom roles
 - gcp-permission: Provides IAM bindings on folder or organization level
+- gcp-billing: Provides IAM bindings for the billing account
 
 
 ### Example 
@@ -84,3 +85,4 @@ This repo uses [SemVer](http://semver.org/) based git tags for versioning which 
 ### Links
 
 - https://www.terraform.io/language/modules/sources#selecting-a-revision
+- Docs generated with: https://github.com/terraform-docs/terraform-docs
