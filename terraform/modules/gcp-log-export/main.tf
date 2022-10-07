@@ -14,6 +14,7 @@ locals {
   AND NOT protoPayload.response.@type="type.googleapis.com/google.cloud.sql.v1.Operation"
   AND NOT (protoPayload.methodName:("v1.compute.instanceGroups.addInstances" OR "v1.compute.instanceGroups.removeInstances" OR "v1.compute.instances.insert" OR "v1.compute.instances.delete") AND protoPayload.authenticationInfo.principalEmail=~".*@cloudservices.gserviceaccount.com")
   AND NOT protoPayload.methodName="cloudsql.instances.connect"
+  AND NOT protoPayload.methodName="cloudsql.instances.restart"
   AND NOT protoPayload.methodName:"storage.objects"
   AND NOT protoPayload.methodName="beta.compute.sslCertificates.delete"
   AND NOT protoPayload.methodName:"google.cloud.bigquery.v2.JobService."
