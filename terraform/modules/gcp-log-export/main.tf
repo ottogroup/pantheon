@@ -12,6 +12,7 @@ locals {
   AND NOT protoPayload.response.@type="type.googleapis.com/operation"
   AND NOT protoPayload.response.@type="type.googleapis.com/google.cloud.sql.v1beta4.Operation"
   AND NOT protoPayload.response.@type="type.googleapis.com/google.cloud.sql.v1.Operation"
+  AND NOT protoPayload.response.@type="type.googleapis.com/google.longrunning.Operation"
   AND NOT (protoPayload.methodName:("v1.compute.instanceGroups.addInstances" OR "v1.compute.instanceGroups.removeInstances" OR "v1.compute.instances.insert" OR "v1.compute.instances.delete") AND protoPayload.authenticationInfo.principalEmail=~".*@cloudservices.gserviceaccount.com")
   AND NOT protoPayload.methodName="cloudsql.instances.connect"
   AND NOT protoPayload.methodName="cloudsql.instances.restart"
