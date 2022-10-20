@@ -19,3 +19,9 @@ variable "pantheon_service_account" {
   type        = string
   description = "The service account used to scan resources. Will be provided by the team."
 }
+
+variable "pantheon_gcp_roles" {
+  type        = list(string)
+  default     = null
+  description = "The roles that will be applied to all folders or the organization. The default are the recommended roles."
+}
