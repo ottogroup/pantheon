@@ -15,4 +15,5 @@ output "necessary_gcp_roles" {
     #
     var.pantheon_engine_role_id
   ]
+  description = "A list of all recommended gcp roles for pantheon. "
 }
