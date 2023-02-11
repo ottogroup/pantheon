@@ -12,6 +12,8 @@ output "necessary_gcp_roles" {
     "roles/bigquery.metadataViewer",
     # for storage.buckets.get
     "roles/firebase.viewer",
+    # for essentialcontacts.organizations.contacts.list
+    "roles/essentialcontacts.viewer",
     #
     var.pantheon_engine_role_id
   ]
