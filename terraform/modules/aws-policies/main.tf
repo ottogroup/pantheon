@@ -30,7 +30,7 @@ locals {
 // policy federation
 // see: https://gist.github.com/wvanderdeijl/c6a9a9f26149cea86039b3608e3556c1
 resource "aws_iam_role" "gcp_federation" {
-  name               = "pantheon-security-audit"
+  name               = var.pantheon_role_name
   path               = "/"
   description        = "Allow Pantheon to scan resources in AWS"
   assume_role_policy = jsonencode(local.gcp_federation)

@@ -14,6 +14,7 @@ This repository contains the following terraform modules
 module "pantheon_access_policies" {
     source                      = "github.com/ottogroup/pantheon//terraform/modules/aws-policies?ref=v1.1.2"
     pantheon_service_account_id = "100020003000400050006"
+    pantheon_role_name          = "pantheon-security-audit"
 }
 ```
 

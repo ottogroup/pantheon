@@ -28,9 +28,12 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_pantheon_role_name"></a> [pantheon\_role\_name](#input\_pantheon\_role\_name) | AWS IAM Role name | `string` | n/a | yes |
 | <a name="input_pantheon_service_account_id"></a> [pantheon\_service\_account\_id](#input\_pantheon\_service\_account\_id) | GSP service account id used to scan resources. Will be provided by the team. | `number` | n/a | yes |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_pantheon-role-arn"></a> [pantheon-role-arn](#output\_pantheon-role-arn) | n/a |
 <!-- END_TF_DOCS -->
