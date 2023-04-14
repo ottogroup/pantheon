@@ -42,3 +42,10 @@ resource "aws_iam_role_policy_attachment" "attach_SecurityAudit_to_gcp_federatio
   role       = aws_iam_role.gcp_federation.name
   policy_arn = data.aws_iam_policy.SecurityAudit.arn
 }
+data "aws_iam_policy" "ViewOnly" {
+  name = "ViewOnly"
+}
+resource "aws_iam_role_policy_attachment" "attach_ViewOnly_to_gcp_federation" {
+  role       = aws_iam_role.gcp_federation.name
+  policy_arn = data.aws_iam_policy.ViewOnly.arn
+}
