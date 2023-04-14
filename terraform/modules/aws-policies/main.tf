@@ -23,8 +23,6 @@ locals {
           }
         }
       }
-      // required permissions part
-      // see: https://docs.aws.amazon.com/service-authorization/latest/reference/list_amazondynamodb.html
     ]
   }
 }
