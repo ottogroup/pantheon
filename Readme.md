@@ -3,6 +3,20 @@
 This repository contains the following terraform modules 
 
 
+## Amazon Web Services (AWS)
+
+- aws-policies: Provides required access policies
+
+### Module `aws-policies` usage
+
+
+```bash
+module "pantheon_access_policies" {
+    source                      = "github.com/ottogroup/pantheon//terraform/modules/aws-policies?ref=v1.1.2"
+    pantheon_service_account_id = "100020003000400050006"
+}
+```
+
 ## Google Cloud Platform
 
 - gcp-log-export: Provides log-export on folder or organization level
