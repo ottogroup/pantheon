@@ -47,5 +47,15 @@ data "aws_iam_policy" "ViewOnlyAccess" {
 resource "aws_iam_policy_attachment" "attach_ViewOnlyAccess_to_gcp_federation" {
   policy_arn = data.aws_iam_policy.ViewOnlyAccess.arn
   name       = "pantheon-has-view-only-access"
-  roles = [aws_iam_role.gcp_federation.name]
+  roles      = [aws_iam_role.gcp_federation.name]
+}
+resource "aws_iam_policy" "pantheon_full_policy" {
+  name = var.pantheon_full_access_policy_name
+  path = "/"
+  policy = jsonencode(jsondecode(file("${path.module}/cloud-formation/Stackset-Pantheon-Role-AWSLinkedAccounts.json"))["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"])
+}
+resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy_to_gcp_federation" {
+  policy_arn = aws_iam_policy.pantheon_full_policy.arn
+  name       = "pantheon-has-full-access"
+  roles      = [aws_iam_role.gcp_federation.name]
 }

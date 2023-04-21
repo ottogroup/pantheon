@@ -1,0 +1,233 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Conditions": {
+    "RoleParamIsProvided": {
+      "Fn::Not": [
+        {
+          "Fn::Equals": [
+            {
+              "Ref": "RoleARN"
+            },
+            ""
+          ]
+        }
+      ]
+    },
+    "Standard": {
+      "Fn::Equals": [
+        {
+          "Ref": "AWS::Partition"
+        },
+        "aws"
+      ]
+    }
+  },
+  "Description": "Pantheon audit access",
+  "Outputs": {
+    "PantheonServiceAccountId": {
+      "Description": "Your External ID",
+      "Value": {
+        "Ref": "PantheonServiceAccountId"
+      }
+    },
+    "RoleARNID": {
+      "Description": "Your Role ARN ID",
+      "Value": {
+        "Fn::GetAtt": [
+          "Role",
+          "Arn"
+        ]
+      }
+    }
+  },
+  "Parameters": {
+    "PantheonServiceAccountId": {
+      "AllowedPattern": "^[0-9]*$",
+      "Description": "GCP service account id used to scan resources. Will be provided by the Pantheon provided.",
+      "Type": "String"
+    },
+    "RoleARN": {
+      "Default": "",
+      "Description": "Enter Role ARN, leave empty for default",
+      "Type": "String"
+    },
+    "PantheonRoleName": {
+      "Default": "PantheonAccess-Role",
+      "Description": "Enter the role name that will be installed on your account, the default is PantheonAccess-Role",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "Role": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Federated": "accounts.google.com"
+              },
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": {
+                "StringEquals": {
+                  "accounts.google.com:sub": {
+                    "Ref": "PantheonServiceAccountId"
+                  },
+                  "accounts.google.com:oaud": "http://aws.skunk.team"
+                },
+                "Null": {
+                  "accounts.google.com:sub": "false",
+                  "accounts.google.com:oaud": "false"
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/job-function/ViewOnlyAccess"
+          },
+          {
+            "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/SecurityAudit"
+          }
+        ],
+        "RoleName": {
+          "Ref": "PantheonRoleName"
+        }
+      },
+      "Type": "AWS::IAM::Role"
+    },
+    "PantheonFullPolicy": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "acm:GetCertificate",
+                "acm:GetAccountConfiguration",
+                "apigateway:GET",
+                "athena:GetCatalogs",
+                "athena:GetDataCatalog",
+                "athena:GetDatabase",
+                "athena:GetExecutionEngine",
+                "athena:GetExecutionEngines",
+                "athena:GetNamespace",
+                "athena:GetNamespaces",
+                "athena:GetQueryExecution",
+                "athena:GetQueryExecutions",
+                "athena:GetTable",
+                "athena:GetTableMetadata",
+                "athena:GetTables",
+                "athena:GetWorkGroup",
+                "backup:DescribeGlobalSettings",
+                "backup:GetBackupVaultAccessPolicy",
+                "backup:GetBackupVaultNotifications",
+                "backup:ListBackupVaults",
+                "backup:ListTags",
+                "cloudtrail:GetInsightSelectors",
+                "cloudtrail:ListTrails",
+                "codebuild:BatchGetProjects",
+                "codebuild:GetResourcePolicy",
+                "codebuild:ListProjects",
+                "cognito-identity:DescribeIdentityPool",
+                "connect:ListInstances",
+                "connect:ListInstanceAttributes",
+                "connect:ListInstanceStorageConfigs",
+                "connect:ListSecurityKeys",
+                "connect:ListLexBots",
+                "connect:ListLambdaFunctions",
+                "connect:ListApprovedOrigins",
+                "connect:ListIntegrationAssociations",
+                "dynamodb:DescribeExport",
+                "dynamodb:DescribeKinesisStreamingDestination",
+                "dynamodb:ListExports",
+                "dynamodb:ListImports",
+                "ec2:GetEbsEncryptionByDefault",
+                "ec2:SearchTransitGatewayRoutes",
+                "ecr:BatchGetImage",
+                "ecr:GetAuthorizationToken",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:GetRegistryPolicy",
+                "ecr-public:ListTagsForResource",
+                "eks:ListTagsForResource",
+                "elasticfilesystem:DescribeAccessPoints",
+                "elasticfilesystem:DescribeFileSystemPolicy",
+                "elasticmapreduce:GetAutoTerminationPolicy",
+                "elasticmapreduce:GetManagedScalingPolicy",
+                "glacier:GetDataRetrievalPolicy",
+                "glacier:GetVaultLock",
+                "glue:GetConnection",
+                "glue:GetSecurityConfiguration",
+                "glue:GetTags",
+                "health:DescribeAffectedAccountsForOrganization",
+                "health:DescribeAffectedEntities",
+                "health:DescribeAffectedEntitiesForOrganization",
+                "health:DescribeEntityAggregates",
+                "health:DescribeEventAggregates",
+                "health:DescribeEventDetails",
+                "health:DescribeEventDetailsForOrganization",
+                "health:DescribeEventTypes",
+                "health:DescribeEvents",
+                "health:DescribeEventsForOrganization",
+                "health:DescribeHealthServiceStatusForOrganization",
+                "kafka:ListClusters",
+                "kendra:DescribeDataSource",
+                "kendra:DescribeIndex",
+                "kendra:ListDataSources",
+                "kendra:ListIndices",
+                "kendra:ListTagsForResource",
+                "kinesisanalytics:ListApplications",
+                "kinesisanalytics:DescribeApplication",
+                "kinesisanalytics:ListTagsForResource",
+                "kinesisvideo:ListStreams",
+                "kinesisvideo:ListTagsForStream",
+                "kinesisvideo:GetDataEndpoint",
+                "kms:GetKeyRotationStatus",
+                "kms:ListResourceTags",
+                "lambda:GetFunction",
+                "lambda:GetLayerVersion",
+                "logs:ListTagsForResource",
+                "profile:GetDomain",
+                "profile:ListDomains",
+                "profile:ListIntegrations",
+                "s3:GetBucketNotification",
+                "s3:GetMultiRegionAccessPointPolicy",
+                "s3:ListMultiRegionAccessPoints",
+                "ses:DescribeActiveReceiptRuleSet",
+                "ses:GetAccount",
+                "ses:GetConfigurationSet",
+                "ses:GetConfigurationSetEventDestinations",
+                "ses:GetDedicatedIps",
+                "ses:GetEmailIdentity",
+                "ses:ListConfigurationSets",
+                "ses:ListDedicatedIpPools",
+                "ses:ListReceiptFilters",
+                "voiceid:DescribeDomain",
+                "wafv2:GetLoggingConfiguration",
+                "wafv2:GetWebACLForResource",
+                "wisdom:GetAssistant",
+                "macie2:ListFindings",
+                "macie2:GetFindings",
+                "identitystore:List*",
+                "identitystore:Describe*",
+                "sso-directory:Describe*",
+                "sso-directory:ListMembersInGroup"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "PantheonFullPolicy",
+        "Roles": [
+          {
+            "Ref": "Role"
+          }
+        ]
+      },
+      "Type": "AWS::IAM::Policy"
+    }
+  }
+}
