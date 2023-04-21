@@ -12,7 +12,7 @@ This repository contains the following terraform modules
 
 ```bash
 module "pantheon_access_policies" {
-    source                      = "github.com/ottogroup/pantheon//terraform/modules/aws-policies?ref=v1.1.2"
+    source                      = "github.com/ottogroup/pantheon//terraform/modules/aws-policies?ref=v1.1.4"
     pantheon_service_account_id = "100020003000400050006"
     pantheon_role_name          = "pantheon-security-audit"
 }
