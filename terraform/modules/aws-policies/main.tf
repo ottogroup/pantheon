@@ -13,12 +13,11 @@ locals {
         ]
         Condition = {
           "StringEquals" : {
-            "accounts.google.com:aud"  = tostring(var.pantheon_service_account_id),
             "accounts.google.com:sub"  = tostring(var.pantheon_service_account_id),
             "accounts.google.com:oaud" = "http://aws.skunk.team"
           }
           Null = {
-            "accounts.google.com:aud"  = "false"
+            "accounts.google.com:sub"  = "false"
             "accounts.google.com:oaud" = "false"
           }
         }
