@@ -105,7 +105,6 @@
             {
               "Action": [
                 "acm:GetAccountConfiguration",
-                "apigateway:GET",
                 "athena:GetCatalogs",
                 "athena:GetDataCatalog",
                 "athena:GetDatabase",
