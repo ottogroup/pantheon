@@ -49,10 +49,27 @@ resource "aws_iam_policy_attachment" "attach_ViewOnlyAccess_to_gcp_federation" {
   name       = "pantheon-has-view-only-access"
   roles      = [aws_iam_role.gcp_federation.name]
 }
+locals {
+  pantheon_full_policy_document = jsondecode(file("${path.module}/cloud-formation/Stackset-Pantheon-Role-AWSLinkedAccounts.json"))["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy_document_with_deny_actions = len(var.pantheon_full_access_policy_deny_actions) > 0 ? {
+    Statement : concat(
+      local.pantheon_full_policy_document["Statement"],
+      [
+        {
+          Action : var.pantheon_full_access_policy_deny_actions,
+          Effect : "Deny",
+          Resource : "*"
+        }
+      ]
+    )
+    Version : local.pantheon_full_policy_document["Version"]
+  } : local.pantheon_full_policy_document
+}
+
 resource "aws_iam_policy" "pantheon_full_policy" {
-  name = var.pantheon_full_access_policy_name
-  path = "/"
-  policy = jsonencode(jsondecode(file("${path.module}/cloud-formation/Stackset-Pantheon-Role-AWSLinkedAccounts.json"))["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"])
+  name   = var.pantheon_full_access_policy_name
+  path   = "/"
+  policy = jsonencode(local.pantheon_full_policy_document_with_deny_actions)
 }
 resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy_to_gcp_federation" {
   policy_arn = aws_iam_policy.pantheon_full_policy.arn
