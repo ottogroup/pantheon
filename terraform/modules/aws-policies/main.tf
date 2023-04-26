@@ -51,7 +51,7 @@ resource "aws_iam_policy_attachment" "attach_ViewOnlyAccess_to_gcp_federation" {
 }
 locals {
   pantheon_full_policy_document = jsondecode(file("${path.module}/cloud-formation/Stackset-Pantheon-Role-AWSLinkedAccounts.json"))["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"]
-  pantheon_full_policy_document_with_deny_actions = len(var.pantheon_full_access_policy_deny_actions) > 0 ? {
+  pantheon_full_policy_document_with_deny_actions = length(var.pantheon_full_access_policy_deny_actions) > 0 ? {
     Statement : concat(
       local.pantheon_full_policy_document["Statement"],
       [
