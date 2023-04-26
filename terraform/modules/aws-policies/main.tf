@@ -65,7 +65,6 @@ locals {
     Version : local.pantheon_full_policy_document["Version"]
   } : local.pantheon_full_policy_document
 }
-
 resource "aws_iam_policy" "pantheon_full_policy" {
   name   = var.pantheon_full_access_policy_name
   path   = "/"
