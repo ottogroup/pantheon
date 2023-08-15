@@ -1,28 +1,31 @@
 locals {
-  gcp_federation = {
-    Version = "2012-10-17"
-    // federation part
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Federated = "accounts.google.com"
-        }
-        Action = [
-          "sts:AssumeRoleWithWebIdentity",
-        ]
-        Condition = {
-          "StringEquals" : {
-            "accounts.google.com:sub"  = tostring(var.pantheon_service_account_id),
-            "accounts.google.com:oaud" = "http://aws.skunk.team"
-          }
-          Null = {
-            "accounts.google.com:sub"  = "false"
-            "accounts.google.com:oaud" = "false"
-          }
-        }
-      }
+  cf-document = jsondecode(file("${path.module}/cloud-formation/Stackset-Pantheon-Role-AWSLinkedAccounts.json"))
+
+}
+data "aws_iam_policy_document" "federation" {
+  statement {
+    effect  = "Allow"
+    actions = [
+      "sts:AssumeRoleWithWebIdentity",
     ]
+    condition {
+      test     = "StringEquals"
+      variable = "accounts.google.com:sub"
+      values   = [
+        tostring(var.pantheon_service_account_id)
+      ]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "accounts.google.com:oaud"
+      values   = [
+        local.cf-document["Resources"]["Role"]["Properties"]["AssumeRolePolicyDocument"]["Statement"][0]["Condition"]["StringEquals"]["accounts.google.com:oaud"]
+      ]
+    }
+    principals {
+      type        = "Federated"
+      identifiers = ["accounts.google.com"]
+    }
   }
 }
 
@@ -32,7 +35,7 @@ resource "aws_iam_role" "gcp_federation" {
   name               = var.pantheon_role_name
   path               = "/"
   description        = "Allow Pantheon to scan resources in AWS"
-  assume_role_policy = jsonencode(local.gcp_federation)
+  assume_role_policy = data.aws_iam_policy_document.federation.json
 }
 data "aws_iam_policy" "SecurityAudit" {
   name = "SecurityAudit"
@@ -49,8 +52,17 @@ resource "aws_iam_policy_attachment" "attach_ViewOnlyAccess_to_gcp_federation" {
   name       = "pantheon-has-view-only-access"
   roles      = [aws_iam_role.gcp_federation.name]
 }
+
+data "aws_iam_policy_document" "override" {
+  statement {
+    effect = "Deny"
+    actions = var.pantheon_full_access_policy_deny_actions
+    resources = ["*"]
+  }
+}
+
 locals {
-  pantheon_full_policy_document = jsondecode(file("${path.module}/cloud-formation/Stackset-Pantheon-Role-AWSLinkedAccounts.json"))["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy_document                   = local.cf-document["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"]
   pantheon_full_policy_document_with_deny_actions = length(var.pantheon_full_access_policy_deny_actions) > 0 ? {
     Statement : concat(
       local.pantheon_full_policy_document["Statement"],
