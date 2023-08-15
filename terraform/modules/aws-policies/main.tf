@@ -4,21 +4,21 @@ locals {
 }
 data "aws_iam_policy_document" "federation" {
   statement {
-    effect  = "Allow"
+    effect = "Allow"
     actions = [
       "sts:AssumeRoleWithWebIdentity",
     ]
     condition {
       test     = "StringEquals"
       variable = "accounts.google.com:sub"
-      values   = [
+      values = [
         tostring(var.pantheon_service_account_id)
       ]
     }
     condition {
       test     = "StringEquals"
       variable = "accounts.google.com:oaud"
-      values   = [
+      values = [
         local.cf-document["Resources"]["Role"]["Properties"]["AssumeRolePolicyDocument"]["Statement"][0]["Condition"]["StringEquals"]["accounts.google.com:oaud"]
       ]
     }
@@ -55,14 +55,14 @@ resource "aws_iam_policy_attachment" "attach_ViewOnlyAccess_to_gcp_federation" {
 
 data "aws_iam_policy_document" "override" {
   statement {
-    effect = "Deny"
-    actions = var.pantheon_full_access_policy_deny_actions
+    effect    = "Deny"
+    actions   = var.pantheon_full_access_policy_deny_actions
     resources = ["*"]
   }
 }
 
 locals {
-  pantheon_full_policy_document                   = local.cf-document["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy_document = local.cf-document["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"]
   pantheon_full_policy_document_with_deny_actions = length(var.pantheon_full_access_policy_deny_actions) > 0 ? {
     Statement : concat(
       local.pantheon_full_policy_document["Statement"],
