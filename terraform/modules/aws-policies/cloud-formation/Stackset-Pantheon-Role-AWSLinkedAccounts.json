@@ -73,11 +73,7 @@
                   "accounts.google.com:sub": {
                     "Ref": "PantheonServiceAccountId"
                   },
-                  "accounts.google.com:oaud": "http://aws.skunk.team"
-                },
-                "Null": {
-                  "accounts.google.com:sub": "false",
-                  "accounts.google.com:oaud": "false"
+                  "accounts.google.com:oaud": "https://www.pantheon.app.ottogroupdata.works"
                 }
               }
             }
