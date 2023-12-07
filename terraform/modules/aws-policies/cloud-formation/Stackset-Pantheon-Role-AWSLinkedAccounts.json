@@ -388,7 +388,6 @@
                 "kinesisvideo:ListTagsForStream",
                 "kms:GetKeyRotationStatus",
                 "kms:ListResourceTags",
-                "kms:ScheduleKeyDeletion",
                 "lambda:GetCodeSigningConfig",
                 "lambda:GetFunction",
                 "lambda:GetFunctionCodeSigningConfig",
