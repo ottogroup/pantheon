@@ -404,7 +404,6 @@
                 "glue:ListSessions",
                 "glue:ListTriggers",
                 "glue:ListWorkflows",
-                "glue:SearchTables",
                 "guardduty:DescribeMalwareScans",
                 "guardduty:DescribeOrganizationConfiguration",
                 "health:DescribeAffectedAccountsForOrganization",
