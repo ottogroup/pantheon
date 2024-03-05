@@ -63,7 +63,7 @@ data "aws_iam_policy_document" "override" {
 
 locals {
   // 1
-  pantheon_full_policy_document = local.cf-document["Resources"]["PantheonFullPolicy"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy_document = local.cf-document["Resources"]["PantheonFullPolicy0"]["Properties"]["PolicyDocument"]
   pantheon_full_policy_document_with_deny_actions = length(var.pantheon_full_access_policy_deny_actions) > 0 ? {
     Statement : concat(
       local.pantheon_full_policy_document["Statement"],
@@ -78,7 +78,7 @@ locals {
     Version : local.pantheon_full_policy_document["Version"]
   } : local.pantheon_full_policy_document
   // 2
-  pantheon_full_policy2_document = local.cf-document["Resources"]["PantheonFullPolicy2"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy2_document = local.cf-document["Resources"]["PantheonFullPolicy1"]["Properties"]["PolicyDocument"]
   pantheon_full_policy2_document_with_deny_actions = length(var.pantheon_full_access_policy_deny_actions) > 0 ? {
     Statement : concat(
       local.pantheon_full_policy2_document["Statement"],
@@ -93,7 +93,7 @@ locals {
     Version : local.pantheon_full_policy2_document["Version"]
   } : local.pantheon_full_policy2_document
   // 3
-  pantheon_full_policy3_document = local.cf-document["Resources"]["PantheonFullPolicy3"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy3_document = local.cf-document["Resources"]["PantheonFullPolicy2"]["Properties"]["PolicyDocument"]
   pantheon_full_policy3_document_with_deny_actions = length(var.pantheon_full_access_policy_deny_actions) > 0 ? {
     Statement : concat(
       local.pantheon_full_policy3_document["Statement"],

@@ -52,7 +52,7 @@
       "Type": "String"
     },
     "PantheonRoleName": {
-      "Default": "PantheonAccess-Role",
+      "Default": "pantheon-audit-access",
       "Description": "Enter the role name that will be installed on your account, the default is PantheonAccess-Role",
       "Type": "String"
     }
@@ -86,6 +86,15 @@
           },
           {
             "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/SecurityAudit"
+          },
+          {
+            "Ref": "PantheonFullPolicy0"
+          },
+          {
+            "Ref": "PantheonFullPolicy1"
+          },
+          {
+            "Ref": "PantheonFullPolicy2"
           }
         ],
         "RoleName": {
@@ -94,7 +103,7 @@
       },
       "Type": "AWS::IAM::Role"
     },
-    "PantheonFullPolicy": {
+    "PantheonFullPolicy0": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -275,16 +284,11 @@
           ],
           "Version": "2012-10-17"
         },
-        "PolicyName": "PantheonFullPolicy",
-        "Roles": [
-          {
-            "Ref": "Role"
-          }
-        ]
+        "ManagedPolicyName": "PantheonFullPolicy0"
       },
-      "Type": "AWS::IAM::Policy"
+      "Type": "AWS::IAM::ManagedPolicy"
     },
-    "PantheonFullPolicy2": {
+    "PantheonFullPolicy1": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -468,16 +472,11 @@
           ],
           "Version": "2012-10-17"
         },
-        "PolicyName": "PantheonFullPolicy2",
-        "Roles": [
-          {
-            "Ref": "Role"
-          }
-        ]
+        "ManagedPolicyName": "PantheonFullPolicy1"
       },
-      "Type": "AWS::IAM::Policy"
+      "Type": "AWS::IAM::ManagedPolicy"
     },
-    "PantheonFullPolicy3": {
+    "PantheonFullPolicy2": {
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -655,14 +654,9 @@
           ],
           "Version": "2012-10-17"
         },
-        "PolicyName": "PantheonFullPolicy3",
-        "Roles": [
-          {
-            "Ref": "Role"
-          }
-        ]
+        "ManagedPolicyName": "PantheonFullPolicy2"
       },
-      "Type": "AWS::IAM::Policy"
+      "Type": "AWS::IAM::ManagedPolicy"
     }
   }
 }
