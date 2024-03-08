@@ -256,7 +256,7 @@
             },
             {
               "Action": [
-                "apigateway:GET*"
+                "apigateway:GET"
               ],
               "Effect": "Allow",
               "Resource": "*"
