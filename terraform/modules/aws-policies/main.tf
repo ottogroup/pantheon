@@ -126,12 +126,14 @@ resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy3_to_gcp_federati
 }
 // deny actions
 resource "aws_iam_policy" "pantheon_deny_policy1" {
+  count = length(var.pantheon_full_access_policy_deny_actions) > 0 ? 1 : 0
   name   = "${var.pantheon_full_access_policy_name}DenyActions1"
   path   = "/"
   policy = jsonencode(local.pantheon_deny_actions1)
 }
 resource "aws_iam_policy_attachment" "attach_PantheonDenyActionsPolicy1_to_gcp_federation" {
-  policy_arn = aws_iam_policy.pantheon_deny_policy1.arn
+  count = length(var.pantheon_full_access_policy_deny_actions) > 0 ? 1 : 0
+  policy_arn = aws_iam_policy.pantheon_deny_policy1[0].arn
   name       = "pantheon-has-not-full-access-on-1"
   roles      = [aws_iam_role.gcp_federation.name]
 }
