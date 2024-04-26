@@ -65,6 +65,7 @@ locals {
   AND NOT protoPayload.serviceName="serviceusage.googleapis.com"
   AND NOT protoPayload.serviceName="speech.googleapis.com"
   AND NOT protoPayload.serviceName="websecurityscanner.googleapis.com"
+  AND NOT protoPayload.serviceName="admin.googleapis.com"
 EOT
 }
 
