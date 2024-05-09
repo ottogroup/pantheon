@@ -198,6 +198,7 @@
                 "connect:ListLambdaFunctions",
                 "connect:ListLexBots",
                 "connect:ListSecurityKeys",
+                "iam:ListOpenIDConnectProviderTags",
                 "dms:ListTagsForResource",
                 "rds:DescribeCertificates",
                 "rds:DescribeDBClusterParameterGroups",
