@@ -95,6 +95,9 @@
           },
           {
             "Ref": "PantheonFullPolicy2"
+          },
+          {
+            "Ref": "PantheonFullPolicy3"
           }
         ],
         "RoleName": {
@@ -110,6 +113,11 @@
             {
               "Action": [
                 "acm:GetAccountConfiguration",
+                "aps:DescribeAlertManagerDefinition",
+                "aps:DescribeLoggingConfiguration",
+                "aps:DescribeRuleGroupsNamespace",
+                "aps:DescribeWorkspace",
+                "aps:ListRuleGroupsNamespaces",
                 "aps:ListWorkspaces",
                 "athena:GetCatalogs",
                 "athena:GetDataCatalog",
@@ -178,6 +186,7 @@
                 "codeartifact:ListDomains",
                 "codeartifact:ListPackages",
                 "codeartifact:ListRepositoriesInDomain",
+                "codeartifact:ListTagsForResource",
                 "codebuild:BatchGetProjects",
                 "codebuild:GetResourcePolicy",
                 "codebuild:ListBuildBatches",
@@ -236,21 +245,11 @@
                 "ec2:ListSnapshotsInRecycleBin",
                 "ecr-public:ListTagsForResource",
                 "ecr:BatchGetImage",
+                "ecr:DescribeImageReplicationStatus",
                 "ecr:DescribePullThroughCacheRules",
                 "ecr:DescribeRegistry",
                 "ecr:GetLifecyclePolicyPreview",
-                "ecr:GetRegistryPolicy",
-                "ecr-public:DescribeImageTags",
-                "ecr-public:DescribeRegistries",
-                "ecr-public:GetRegistryCatalogData",
-                "ecr-public:GetRepositoryCatalogData",
-                "elasticfilesystem:DescribeAccessPoints",
-                "elasticfilesystem:DescribeAccountPreferences",
-                "elasticfilesystem:DescribeFileSystems",
-                "elasticfilesystem:DescribeMountTargets",
-                "elasticfilesystem:DescribeReplicationConfigurations",
-                "eks:DescribeAddonVersions",
-                "eks:ListTagsForResource"
+                "ecr:GetRegistryPolicy"
               ],
               "Effect": "Allow",
               "Resource": "*"
@@ -285,9 +284,25 @@
           "Statement": [
             {
               "Action": [
+                "ecr-public:DescribeImageTags",
+                "ecr-public:DescribeRegistries",
+                "ecr-public:GetRegistryCatalogData",
+                "ecr-public:GetRepositoryCatalogData",
+                "elasticfilesystem:DescribeAccessPoints",
+                "elasticfilesystem:DescribeAccountPreferences",
+                "elasticfilesystem:DescribeFileSystems",
+                "elasticfilesystem:DescribeMountTargets",
+                "elasticfilesystem:DescribeReplicationConfigurations",
+                "eks:DescribeAddon",
+                "eks:DescribeAddonVersions",
+                "eks:DescribeIdentityProviderConfig",
+                "eks:ListAddons",
+                "eks:ListIdentityProviderConfigs",
+                "eks:ListTagsForResource",
                 "elasticache:ListAllowedNodeTypeModifications",
                 "elasticfilesystem:DescribeAccessPoints",
                 "elasticfilesystem:DescribeFileSystemPolicy",
+                "elasticfilesystem:ListTagsForResource",
                 "elasticloadbalancing:DescribeAccountLimits",
                 "elasticloadbalancing:DescribeListenerCertificates",
                 "elasticloadbalancing:DescribeListeners",
@@ -325,8 +340,15 @@
                 "emr-containers:ListJobTemplates",
                 "emr-containers:ListManagedEndpoints",
                 "emr-containers:ListVirtualClusters",
+                "emr-containers:DescribeJobRun",
+                "emr-containers:DescribeJobTemplate",
+                "emr-containers:DescribeManagedEndpoint",
+                "emr-containers:DescribeVirtualCluster",
                 "emr-serverless:ListApplications",
+                "emr-serverless:GetJobRun",
                 "fms:GetNotificationChannel",
+                "fms:GetPolicy",
+                "fms:GetProtectionStatus",
                 "fms:ListAppsLists",
                 "fms:ListProtocolsLists",
                 "fms:ListResourceSets",
@@ -337,9 +359,16 @@
                 "glacier:ListMultipartUploads",
                 "glacier:ListProvisionedCapacity",
                 "glacier:ListTagsForVault",
+                "glue:BatchGetBlueprints",
+                "glue:BatchGetCustomEntityTypes",
+                "glue:BatchGetWorkflows",
                 "glue:BatchGetCrawlers",
                 "glue:BatchGetDevEndpoints",
                 "glue:BatchGetTriggers",
+                "glue:GetBlueprint",
+                "glue:GetBlueprintRuns",
+                "glue:GetConnection",
+                "glue:GetCustomEntityType",
                 "glue:GetCatalogImportStatus",
                 "glue:GetClassifier",
                 "glue:GetClassifiers",
@@ -389,9 +418,31 @@
                 "glue:ListMLTransforms",
                 "glue:ListRegistries",
                 "glue:ListSchemas",
+                "glue:ListSchemaVersions",
                 "glue:ListSessions",
                 "glue:ListTriggers",
-                "glue:ListWorkflows",
+                "glue:ListWorkflows"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyName": "PantheonFullPolicy1"
+      },
+      "Type": "AWS::IAM::ManagedPolicy"
+    },
+    "PantheonFullPolicy2": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "grafana:DescribeWorkspace",
+                "grafana:DescribeWorkspaceAuthentication",
+                "grafana:DescribeWorkspaceConfiguration",
+                "grafana:ListPermissions",
                 "guardduty:DescribeMalwareScans",
                 "guardduty:DescribeOrganizationConfiguration",
                 "health:DescribeAffectedAccountsForOrganization",
@@ -410,6 +461,9 @@
                 "inspector2:ListMembers",
                 "iot:GetBehaviorModelTrainingSummaries",
                 "iot:GetEffectivePolicies",
+                "iot:GetJobDocument",
+                "iot:GetOTAUpdate",
+                "iot:GetTopicRuleDestination",
                 "iot:GetIndexingConfiguration",
                 "iot:GetLoggingOptions",
                 "iot:GetRegistrationCode",
@@ -421,21 +475,33 @@
                 "kendra:ListDataSources",
                 "kendra:ListIndices",
                 "kendra:ListTagsForResource",
+                "kinesisanalytics:DescribeApplicationVersion",
                 "kinesisanalytics:DescribeApplication",
                 "kinesisanalytics:ListApplications",
+                "kinesisanalytics:ListApplicationSnapshots",
+                "kinesisanalytics:ListApplicationVersions",
                 "kinesisanalytics:ListTagsForResource",
                 "kinesisvideo:DescribeImageGenerationConfiguration",
+                "kinesisvideo:GetSignalingChannelEndpoint",
                 "kinesisvideo:ListStreams",
                 "kinesisvideo:ListTagsForStream",
                 "kms:GetKeyRotationStatus",
                 "kms:ListResourceTags",
+                "lambda:GetAlias",
                 "lambda:GetCodeSigningConfig",
                 "lambda:GetFunction",
                 "lambda:GetFunctionCodeSigningConfig",
                 "lambda:GetFunctionConcurrency",
                 "lambda:GetFunctionUrlConfig",
+                "lambda:GetLayerVersion",
                 "logs:GetLogGroupFields",
                 "logs:ListTagsForResource",
+                "m2:GetApplication",
+                "m2:GetApplicationVersion",
+                "m2:GetDeployment",
+                "m2:GetEnvironment",
+                "m2:ListApplicationVersions",
+                "m2:ListDeployments",
                 "m2:ListApplications",
                 "m2:ListEngineVersions",
                 "m2:ListEnvironments",
@@ -448,24 +514,7 @@
                 "memorydb:DescribeSnapshots",
                 "memorydb:DescribeSubnetGroups",
                 "memorydb:DescribeUsers",
-                "memorydb:ListAllowedNodeTypeUpdates"
-              ],
-              "Effect": "Allow",
-              "Resource": "*"
-            }
-          ],
-          "Version": "2012-10-17"
-        },
-        "ManagedPolicyName": "PantheonFullPolicy1"
-      },
-      "Type": "AWS::IAM::ManagedPolicy"
-    },
-    "PantheonFullPolicy2": {
-      "Properties": {
-        "PolicyDocument": {
-          "Statement": [
-            {
-              "Action": [
+                "memorydb:ListAllowedNodeTypeUpdates",
                 "network-firewall:ListFirewallPolicies",
                 "network-firewall:ListFirewalls",
                 "network-firewall:ListRuleGroups",
@@ -474,6 +523,9 @@
                 "networkmanager:GetConnectAttachment",
                 "networkmanager:GetConnectPeerAssociations",
                 "networkmanager:GetConnections",
+                "networkmanager:GetConnectPeer",
+                "networkmanager:GetCoreNetwork",
+                "networkmanager:GetCoreNetworkPolicy",
                 "networkmanager:GetCustomerGatewayAssociations",
                 "networkmanager:GetDevices",
                 "networkmanager:GetLinkAssociations",
@@ -492,6 +544,7 @@
                 "networkmanager:ListAttachments",
                 "networkmanager:ListConnectPeers",
                 "networkmanager:ListCoreNetworks",
+                "networkmanager:ListCoreNetworkPolicyVersions",
                 "networkmanager:ListPeerings",
                 "profile:GetDomain",
                 "profile:ListDomains",
@@ -524,7 +577,24 @@
                 "route53-recovery-readiness:ListResourceSets",
                 "route53-recovery-readiness:ListRules",
                 "route53domains:GetContactReachabilityStatus",
-                "route53domains:ListPrices",
+                "route53domains:ListPrices"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "ManagedPolicyName": "PantheonFullPolicy2"
+      },
+      "Type": "AWS::IAM::ManagedPolicy"
+    },
+    "PantheonFullPolicy3": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
                 "s3:GetAccessPointConfigurationForObjectLambda",
                 "s3:GetAccessPointPolicyForObjectLambda",
                 "s3:GetAccessPointPolicyStatusForObjectLambda",
@@ -541,6 +611,8 @@
                 "s3:ListJobs",
                 "s3:ListMultiRegionAccessPoints",
                 "s3:ListStorageLensConfigurations",
+                "sagemaker:GetLineageGroupPolicy",
+                "sagemaker:GetModelPackageGroupPolicy",
                 "sagemaker:GetSagemakerServicecatalogPortfolioStatus",
                 "ses:GetContactList",
                 "ses:GetDedicatedIpPool",
@@ -568,6 +640,7 @@
                 "ses:ListRecommendations",
                 "ses:ListSuppressedDestinations",
                 "ses:ListTemplates",
+                "ssm:GetOpsItem",
                 "ssm-sap:GetApplication",
                 "ssm-sap:GetDatabase",
                 "ssm-sap:ListApplications",
@@ -593,11 +666,14 @@
                 "ssm:ListOpsItemRelatedItems",
                 "sso-directory:Describe*",
                 "sso-directory:ListMembersInGroup",
+                "states:DescribeStateMachineForExecution",
                 "states:ListActivities",
+                "states:ListExecutions",
                 "timestream:DescribeDatabase",
                 "timestream:DescribeEndpoints",
                 "timestream:ListDatabases",
                 "timestream:ListTables",
+                "timestream:ListTagsForResource",
                 "voiceid:DescribeDomain",
                 "waf:ListActivatedRulesInRuleGroup",
                 "waf:ListByteMatchSets",
@@ -613,6 +689,21 @@
                 "waf:ListSqlInjectionMatchSets",
                 "waf:ListSubscribedRuleGroups",
                 "waf:ListXssMatchSets",
+                "waf-regional:GetByteMatchSet",
+                "waf-regional:GetGeoMatchSet",
+                "waf-regional:GetIPSet",
+                "waf-regional:GetLoggingConfiguration",
+                "waf-regional:GetPermissionPolicy",
+                "waf-regional:GetRateBasedRule",
+                "waf-regional:GetRateBasedRuleManagedKeys",
+                "waf-regional:GetRegexMatchSet",
+                "waf-regional:GetRegexPatternSet",
+                "waf-regional:GetRule",
+                "waf-regional:GetRuleGroup",
+                "waf-regional:GetSizeConstraintSet",
+                "waf-regional:GetSqlInjectionMatchSet",
+                "waf-regional:GetWebACLForResource",
+                "waf-regional:GetXssMatchSet",
                 "waf-regional:ListActivatedRulesInRuleGroup",
                 "waf-regional:ListByteMatchSets",
                 "waf-regional:ListGeoMatchSets",
@@ -629,6 +720,7 @@
                 "waf-regional:ListXssMatchSets",
                 "wafv2:GetLoggingConfiguration",
                 "wafv2:GetRuleGroup",
+                "wafv2:GetPermissionPolicy",
                 "wafv2:GetWebACLForResource",
                 "wisdom:GetAssistant",
                 "xray:GetSamplingStatisticSummaries",
@@ -640,7 +732,7 @@
           ],
           "Version": "2012-10-17"
         },
-        "ManagedPolicyName": "PantheonFullPolicy2"
+        "ManagedPolicyName": "PantheonFullPolicy3"
       },
       "Type": "AWS::IAM::ManagedPolicy"
     }
