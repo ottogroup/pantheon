@@ -188,6 +188,7 @@
                 "codeartifact:ListPackages",
                 "codeartifact:ListRepositoriesInDomain",
                 "codeartifact:ListTagsForResource",
+        				"codebuild:BatchGetBuilds",
                 "codebuild:BatchGetProjects",
                 "codebuild:GetResourcePolicy",
                 "codebuild:ListBuildBatches",
