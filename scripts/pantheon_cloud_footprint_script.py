@@ -37,7 +37,8 @@ github_totals = {
 }
 
 def filter_line(line):
-    if "DeprecationWarning:" in line or "import pipes" in line:
+    to_filter = ["DeprecationWarning:", "import pipes", "datasetId", "------------"]
+    if any(substring in line for substring in to_filter):
         return True
     return False
 
@@ -124,8 +125,8 @@ def count_gcp_resources(regions, project):
 
     alloydb_instances = count_call(
         f"gcloud --quiet alloydb instances list --project={project} --format=\"value(name)\"")
-    cloudsql_instances = count_call(f"gcloud --quiet s1ql instances list --project={project} --format=\"value(name)\"")
-    bigquery_datasets = count_call(f"bq ls -q --project_id={project} --format=csv")
+    cloudsql_instances = count_call(f"gcloud --quiet sql instances list --project={project} --format=\"value(name)\"")
+    bigquery_datasets = count_call(f"bq ls -q --project_id={project}")
     gcs_buckets = count_call(f"gsutil -q ls -p {project}")
 
     bigtable_tables_output = safe_call(f"gcloud --quiet bigtable instances list --project={project} --format=\"value(name)\"")
