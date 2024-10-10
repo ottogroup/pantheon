@@ -1,5 +1,6 @@
-import subprocess
 import argparse
+import re
+import subprocess
 
 parser = argparse.ArgumentParser(description='GCP Footprint Scanner')
 parser.add_argument('-c', '--cloud', action='append', dest='clouds',
@@ -14,19 +15,20 @@ parser.add_argument('-v', '--verbose', action="store_true", dest='verbose_loggin
 args = parser.parse_args()
 
 gcp_totals = {
-    "Cloud Functions": 0,
-    "Cloud Run Services": 0,
-    "App Engine Services": 0,
-    "Compute Instances": 0,
-    "GKE Clusters": 0,
-    "Notebook Instances": 0,
-    "Redis Instances": 0,
     "AlloyDB Instances": 0,
-    "CloudSQL Instances": 0,
-    "BigTable Instances": 0,
-    "Dataflow Jobs": 0,
+    "App Engine Services": 0,
     "BigQuery Datasets": 0,
     "BigTable Tables": 0,
+    "BigTable Instances": 0,
+    "Cloud Functions": 0,
+    "Project": 0,
+    "Compute Instances": 0,
+    "GKE Clusters": 0,
+    "Dataflow Jobs": 0,
+    "Notebook Instances": 0,
+    "Redis Instances": 0,
+    "Cloud Run Services": 0,
+    "CloudSQL Instances": 0,
     "GCS Buckets": 0
 }
 
@@ -36,6 +38,16 @@ github_totals = {
 
 def filter_line(line):
     if "DeprecationWarning:" in line or "import pipes" in line:
+        return True
+    return False
+
+def ignore_error(error_msg):
+    if ("SERVICE_DISABLED" in error_msg or
+            "PERMISSION_DENIED" in error_msg or
+            "API is not enabled on project" in error_msg or
+            "The project is not activated." in error_msg or
+            "API has not been used in project" in error_msg or
+            re.search(r"Apps instance \[(.*?)\] not found: Resource 'applications/(.+?)' was not found", error_msg)):
         return True
     return False
 
@@ -51,9 +63,10 @@ def safe_call(command):
         output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, text=True)
         return output.strip()
     except subprocess.CalledProcessError as e:
-        if "SERVICE_DISABLED" in e.output or "PERMISSION_DENIED" in e.output:
+        if ignore_error(e.output):
             return ''
         else:
+            print("Got unrecoverable error. This is most probably a bug. Please report this to the Pantheon developers:\n",e.output)
             raise
 
 
@@ -95,7 +108,7 @@ def report_counts(aca, counts):
 
 def count_gcp_resources(regions, project):
     # Count resources
-    cloud_functions = count_call(f"gcloud --quiet functions list --project={project} --format=\"value(name)\"")
+    cloud_functions = count_call(f"gcloud --quiet functions list --project={project} --format=\"value(name)\" --filter=\"environment!=GEN_2\"")
     cloud_run_services = count_call(
         f"gcloud --quiet run services list --project={project} --platform managed --format=\"value(metadata.name)\"")
     app_engine_services = count_call(f"gcloud --quiet app services list --project={project} --format=\"value(id)\"")
@@ -111,7 +124,7 @@ def count_gcp_resources(regions, project):
 
     alloydb_instances = count_call(
         f"gcloud --quiet alloydb instances list --project={project} --format=\"value(name)\"")
-    cloudsql_instances = count_call(f"gcloud --quiet sql instances list --project={project} --format=\"value(name)\"")
+    cloudsql_instances = count_call(f"gcloud --quiet s1ql instances list --project={project} --format=\"value(name)\"")
     bigquery_datasets = count_call(f"bq ls -q --project_id={project} --format=csv")
     gcs_buckets = count_call(f"gsutil -q ls -p {project}")
 
@@ -122,19 +135,20 @@ def count_gcp_resources(regions, project):
         bigtable_tables += count_call(f"gcloud --quiet bigtable tables list --project={project} --instance={instance} --format=\"value(name)\"")
 
     counts = {
-        "Cloud Functions": cloud_functions,
-        "Cloud Run Services": cloud_run_services,
+        "AlloyDB Instances": alloydb_instances,
         "App Engine Services": app_engine_services,
+        "BigQuery Datasets": bigquery_datasets,
+        "BigTable Tables": bigtable_tables,
+        "BigTable Instances": bigtable_instances,
+        "Cloud Functions": cloud_functions,
+        "Project": 1,
         "Compute Instances": compute_instances,
         "GKE Clusters": gke_clusters,
+        "Dataflow Jobs": dataflow_jobs,
         "Notebook Instances": notebook_instances,
         "Redis Instances": redis_instances,
-        "Dataflow Jobs": dataflow_jobs,
-        "AlloyDB Instances": alloydb_instances,
+        "Cloud Run Services": cloud_run_services,
         "CloudSQL Instances": cloudsql_instances,
-        "BigTable Instances": bigtable_instances,
-        "BigTable Tables": bigtable_tables,
-        "BigQuery Datasets": bigquery_datasets,
         "GCS Buckets": gcs_buckets
     }
 
@@ -165,7 +179,7 @@ def scan_gcp():
         f"gcloud --quiet compute regions list --format=\"value(name)\" --project={projects[0]}")
     regions = regions_output.splitlines()
 
-    print(f"Starting GCP resource scanning for {len(projects)} projects")
+    print(f"Starting GCP resource scanning for {len(projects)} project/s")
     print("-----------------------------------")
     # Aggregate resources for each project
     for project in projects:
@@ -174,7 +188,7 @@ def scan_gcp():
             gcp_totals[resource] += count
 
     # Print totals
-    print(f"Total GCP resource count in {len(projects)} projects")
+    print(f"Total GCP resource count in {len(projects)} project/s")
     print("============")
     for resource, total in gcp_totals.items():
         print(f"Total {resource}: {total}")
@@ -190,7 +204,7 @@ def scan_github():
         print("No organizations found.")
         exit()
 
-    print(f"Starting GitHub resource scanning for {len(orgs)} organizations")
+    print(f"Starting GitHub resource scanning for {len(orgs)} organization/s")
     print("-----------------------------------")
     # Aggregate resources for each project
     for org in orgs:
@@ -199,7 +213,7 @@ def scan_github():
             github_totals[resource] += count
 
     # Print totals
-    print(f"Total Github resource count in {len(orgs)} organizations")
+    print(f"Total Github resource count in {len(orgs)} organization/s")
     print("============")
     for resource, total in github_totals.items():
         print(f"Total {resource}: {total}")
@@ -208,6 +222,9 @@ def scan_github():
 def run_cloud_module(cloud):
     return any(cloud.lower() == cm.lower() for cm in args.clouds)
 
+if len(args.clouds) == 0:
+    print("No clouds selected.")
+    exit()
 
 if run_cloud_module("GCP"):
     scan_gcp()
