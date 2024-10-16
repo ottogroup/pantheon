@@ -252,6 +252,7 @@
                 "ecr:DescribePullThroughCacheRules",
                 "ecr:DescribeRegistry",
                 "ecr:GetLifecyclePolicyPreview",
+                "ecr:GetLifecyclePolicy",
                 "ecr:GetRegistryPolicy"
               ],
               "Effect": "Allow",
@@ -650,7 +651,9 @@
                 "ses:ListTemplates",
                 "ssm:GetOpsItem",
                 "ssm-sap:GetApplication",
+                "ssm-sap:GetComponent",
                 "ssm-sap:GetDatabase",
+                "ssm-sap:GetResourcePermission",
                 "ssm-sap:ListApplications",
                 "ssm-sap:ListComponents",
                 "ssm-sap:ListDatabases",
@@ -730,7 +733,10 @@
                 "wafv2:GetLoggingConfiguration",
                 "wafv2:GetRuleGroup",
                 "wafv2:GetPermissionPolicy",
+                "wafv2:GetWebACL",
+                "wafv2:ListTagsForResource",
                 "wafv2:GetWebACLForResource",
+                "wafv2:ListWebACLs",
                 "wisdom:GetAssistant",
                 "xray:GetSamplingStatisticSummaries",
                 "xray:ListResourcePolicies"
