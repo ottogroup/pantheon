@@ -650,6 +650,7 @@
                 "ses:ListTemplates",
                 "ssm:GetOpsItem",
                 "ssm-sap:GetApplication",
+                "ssm-sap:GetComponent",
                 "ssm-sap:GetDatabase",
                 "ssm-sap:ListApplications",
                 "ssm-sap:ListComponents",
@@ -730,7 +731,10 @@
                 "wafv2:GetLoggingConfiguration",
                 "wafv2:GetRuleGroup",
                 "wafv2:GetPermissionPolicy",
+                "wafv2:GetWebACL",
+                "wafv2:ListTagsForResource",
                 "wafv2:GetWebACLForResource",
+                "wafv2:ListWebACLs",
                 "wisdom:GetAssistant",
                 "xray:GetSamplingStatisticSummaries",
                 "xray:ListResourcePolicies"
