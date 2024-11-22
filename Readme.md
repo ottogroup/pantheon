@@ -37,6 +37,7 @@ module "pantheon_gcp_folder_log_export" {
     destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
     parent_resource_type = "folder"
     parent_resource_id = "123456789"
+    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
 ```
 
@@ -47,6 +48,7 @@ module "pantheon_gcp_org_log_export" {
     destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
     parent_resource_type = "organization"
     parent_resource_id = "123456789"
+    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
 ```
 
