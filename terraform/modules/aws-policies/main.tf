@@ -4,21 +4,21 @@ locals {
 }
 data "aws_iam_policy_document" "federation" {
   statement {
-    effect  = "Allow"
+    effect = "Allow"
     actions = [
       "sts:AssumeRoleWithWebIdentity",
     ]
     condition {
       test     = "StringEquals"
       variable = "accounts.google.com:sub"
-      values   = [
+      values = [
         tostring(var.pantheon_service_account_id)
       ]
     }
     condition {
       test     = "StringEquals"
       variable = "accounts.google.com:oaud"
-      values   = [
+      values = [
         local.cf-document["Resources"]["Role"]["Properties"]["AssumeRolePolicyDocument"]["Statement"][0]["Condition"]["StringEquals"]["accounts.google.com:oaud"]
       ]
     }
@@ -63,19 +63,19 @@ data "aws_iam_policy_document" "override" {
 locals {
   // 1
   pantheon_full_policy_document = local.cf-document["Resources"]["PantheonFullPolicy0"]["Properties"]["PolicyDocument"]
-  pantheon_full_policy          = {
+  pantheon_full_policy = {
     Statement : local.pantheon_full_policy_document["Statement"]
     Version : local.pantheon_full_policy_document["Version"]
   }
   // 2
   pantheon_full_policy2_document = local.cf-document["Resources"]["PantheonFullPolicy1"]["Properties"]["PolicyDocument"]
-  pantheon_full_policy2          = {
+  pantheon_full_policy2 = {
     Statement : local.pantheon_full_policy2_document["Statement"]
     Version : local.pantheon_full_policy2_document["Version"]
   }
   // 3
   pantheon_full_policy3_document = local.cf-document["Resources"]["PantheonFullPolicy2"]["Properties"]["PolicyDocument"]
-  pantheon_full_policy3          = {
+  pantheon_full_policy3 = {
     Statement : local.pantheon_full_policy3_document["Statement"]
     Version : local.pantheon_full_policy3_document["Version"]
   }
@@ -126,13 +126,13 @@ resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy3_to_gcp_federati
 }
 // deny actions
 resource "aws_iam_policy" "pantheon_deny_policy1" {
-  count = length(var.pantheon_full_access_policy_deny_actions) > 0 ? 1 : 0
+  count  = length(var.pantheon_full_access_policy_deny_actions) > 0 ? 1 : 0
   name   = "${var.pantheon_full_access_policy_name}DenyActions1"
   path   = "/"
   policy = jsonencode(local.pantheon_deny_actions1)
 }
 resource "aws_iam_policy_attachment" "attach_PantheonDenyActionsPolicy1_to_gcp_federation" {
-  count = length(var.pantheon_full_access_policy_deny_actions) > 0 ? 1 : 0
+  count      = length(var.pantheon_full_access_policy_deny_actions) > 0 ? 1 : 0
   policy_arn = aws_iam_policy.pantheon_deny_policy1[0].arn
   name       = "pantheon-has-not-full-access-on-1"
   roles      = [aws_iam_role.gcp_federation.name]
