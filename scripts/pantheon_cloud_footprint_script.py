@@ -133,7 +133,7 @@ def count_gcp_resources(regions, project):
     bigtable_instances = count_lines(bigtable_tables_output)
     bigtable_tables = 0
     for instance in bigtable_tables_output.splitlines():
-        bigtable_tables += count_call(f"gcloud --quiet bigtable tables list --project={project} --instance={instance} --format=\"value(name)\"")
+        bigtable_tables += count_call(f"gcloud --quiet bigtable tables list --project={project} --instances={instance} --format=\"value(name)\"")
 
     counts = {
         "AlloyDB Instances": alloydb_instances,
