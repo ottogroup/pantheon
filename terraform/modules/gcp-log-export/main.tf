@@ -66,6 +66,7 @@ locals {
   AND NOT protoPayload.serviceName="speech.googleapis.com"
   AND NOT protoPayload.serviceName="websecurityscanner.googleapis.com"
   AND NOT protoPayload.serviceName="admin.googleapis.com"
+  AND NOT protoPayload.methodName:"google.cloud.aiplatform.internal."
   AND NOT protoPayload.authenticationInfo.principalEmail="${var.pantheon_service_account}"
 EOT
 }
