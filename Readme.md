@@ -12,9 +12,9 @@ This repository contains the following terraform modules
 
 ```bash
 module "pantheon_access_policies" {
-    source                      = "github.com/ottogroup/pantheon//terraform/modules/aws-policies?ref=v1.1.20"
+    source                      = "github.com/ottogroup/pantheon//terraform/modules/aws-policies?ref=v1.1.26"
     pantheon_service_account_id = "100020003000400050006"
-    pantheon_role_name          = "pantheon-security-audit"
+    pantheon_role_name          = "pantheon-audit-access"
 }
 ```
 
@@ -33,7 +33,7 @@ On folder level
 
 ```bash
 module "pantheon_gcp_folder_log_export" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.20"
+    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.26"
     destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
     parent_resource_type = "folder"
     parent_resource_id = "123456789"
@@ -44,7 +44,7 @@ module "pantheon_gcp_folder_log_export" {
 On organization level
 ```bash
 module "pantheon_gcp_org_log_export" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.20"
+    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.26"
     destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
     parent_resource_type = "organization"
     parent_resource_id = "123456789"
@@ -56,7 +56,7 @@ module "pantheon_gcp_org_log_export" {
 
 ```bash
 module "pantheon_gcp_org" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-org?ref=v1.1.20"
+    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-org?ref=v1.1.26"
     org_id = "123456789"
 }
 ```
@@ -67,7 +67,7 @@ On folder level
 
 ```bash
 module "pantheon_gcp_permission" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.1.20"
+    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.1.26"
     pantheon_engine_role_id = module.pantheon_gcp_org.output.pantheon_engine_role_id
     folder_ids = ["123456789", "987654321"]
     pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
@@ -89,7 +89,7 @@ module "pantheon_gcp_permission" {
 
 ```bash
 module "pantheon_gcp_billing" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-billing?ref=v1.1.20"
+    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-billing?ref=v1.1.26"
     billing_account_id = "00AA00-000AAA-00AA0A"
     pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
