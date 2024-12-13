@@ -1,0 +1,149 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: scanner-cr
+rules:
+  - apiGroups: [ "" ]
+    verbs: ["watch", "list", "get"]
+    # a list of resource types to scan.
+    resources:
+      - pods
+      - services
+      - namespaces
+      - replicationcontrollers
+      - nodes
+      - configmaps
+  - apiGroups: [ "rbac.authorization.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - clusterroles
+      - roles
+      - clusterrolebindings
+      - rolebindings
+  - apiGroups: [ "batch" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - cronjobs
+      - jobs
+  - apiGroups: [ "apps" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - replicasets
+      - daemonsets
+      - deployments
+      - statefulsets
+  - apiGroups: [ "networking.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - ingresses
+  - apiGroups: [ "apps.openshift.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - deploymentconfigs
+  - apiGroups: [ "argoproj.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - rollouts
+  - apiGroups: [ "gateway.solo.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - gateways
+      - httpgateways
+      - routeoptions
+      - routetables
+      - virtualhostoptions
+      - virtualservices
+  - apiGroups: [ "getambassador.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - consulresolvers
+      - devportals
+      - hosts
+      - kubernetesendpointresolvers
+      - kubernetesserviceresolvers
+      - listeners
+      - logservices
+      - mappings
+      - modules
+      - ratelimitservices
+      - tcpmappings
+      - tracingservices
+  - apiGroups: [ "gloo.solo.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - proxies
+      - upstreamgroups
+      - upstreams
+  - apiGroups: [ "graphql.gloo.solo.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - graphqlschemas
+  - apiGroups: [ "install.istio.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - istiooperators
+  - apiGroups: [ "networking.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - managedcertificates
+      - serviceattachments
+      - frontendconfigs
+      - servicenetworkendpointgroups
+  - apiGroups: [ "networking.istio.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - destinationrules
+      - envoyfilters
+      - gateways
+      - serviceentries
+      - sidecars
+      - virtualservices
+      - workloadentries
+      - workloadgroups
+  - apiGroups: [ "ratelimit.solo.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - ratelimitconfigs
+  - apiGroups: [ "security.istio.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - authorizationpolicies
+      - peerauthentications
+      - requestauthentications
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - certificatesigningrequests
+    verbs:
+      - get
+      - create
+      - list
+      - watch
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - certificatesigningrequests/status
+    verbs:
+      - update
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - signers
+    resourceNames:
+      - kubernetes.io/kube-apiserver-client
+    verbs:
+      - sign
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - certificatesigningrequests/approval
+    verbs:
+      - update
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - signers
+    resourceNames:
+      - kubernetes.io/kube-apiserver-client
+    verbs:
+      - approve

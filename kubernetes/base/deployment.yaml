@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scanner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: pantheon-scanner
+  template:
+    metadata:
+      labels:
+        name: pantheon-scanner
+    spec:
+      serviceAccountName: pantheon-scanner-sa
+      containers:
+        - name: scanner
+          image: pantheon-scanner
+          imagePullPolicy: Always
+          ports:
+            - name: health
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+          resources:
+            limits:
+              cpu: "300m"
+              memory: "300Mi"
+            requests:
+              cpu: "10m"
+              memory: "50Mi"
+          env:
+            - name: PANTHEON_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          envFrom:
+            - configMapRef:
+                name: pantheon-scanner-cm
