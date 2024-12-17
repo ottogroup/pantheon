@@ -21,13 +21,7 @@ variable "pantheon_kubernetes_cluster_service_id" {
 variable "pantheon_kubernetes_sink_message_broker" {
   description = "The sink message broker"
 }
-
-module "pantheon_kubernetes_scanner" {
-  source                                  = "github.com/ottogroup/pantheon//terraform/modules/kubernetes-scanner?ref=v1.1.26"
-  pantheon_kubernetes_scanner_image       = "europe-west1-docker.pkg.dev/oghub-pantheon-tooling/public/scanner:latest"
-  pantheon_kubernetes_cluster_asset_class =${props.asset.assetClass}
-pantheon_kubernetes_cluster_canonical_asset_type = ${props.asset.serviceID}
-pantheon_kubernetes_cluster_canonical_resource_id = ${props.asset.canonicalAssetType}
-pantheon_kubernetes_cluster_service_id = ${props.asset.canonicalResourceID}
-pantheon_kubernetes_sink_message_broker = ${resp.kubernetes_message_broker}
+variable "pantheon_kubernetes_node_architecture" {
+  description = "The target node architecture for the scanner"
+  default     = "amd64"
 }

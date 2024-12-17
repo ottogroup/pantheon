@@ -1,10 +1,14 @@
+locals {
+  cronjob_schedule = "@midnight"
+}
+
 resource "kubernetes_cron_job_v1" "scanner" {
   metadata {
     name      = "pantheon-scanner"
     namespace = kubernetes_namespace_v1.pantheon_scanner.metadata.0.name
   }
   spec {
-    schedule                      = "@midnight"
+    schedule                      = local.cronjob_schedule
     timezone                      = "Europe/Berlin"
     concurrency_policy            = "Forbid"
     failed_jobs_history_limit     = 1
@@ -18,8 +22,8 @@ resource "kubernetes_cron_job_v1" "scanner" {
 
         template {
           spec {
-            restart_policy                  = "OnFailure"
-            service_account_name            = kubernetes_service_account_v1.pantheon_scanner.metadata.name
+            restart_policy       = "OnFailure"
+            service_account_name = kubernetes_service_account_v1.pantheon_scanner.metadata.name
             affinity {
               node_affinity {
                 preferred_during_scheduling_ignored_during_execution {
@@ -28,7 +32,7 @@ resource "kubernetes_cron_job_v1" "scanner" {
                     match_expressions {
                       key      = "kubernetes.io/arch"
                       operator = "In"
-                      values   = ["amd64"]
+                      values = [var.pantheon_kubernetes_node_architecture]
                     }
                   }
                 }
@@ -76,7 +80,6 @@ resource "kubernetes_cron_job_v1" "scanner" {
                 allow_privilege_escalation = false
                 privileged                 = false
                 read_only_root_filesystem  = false
-                run_as_non_root            = false
 
                 capabilities {
                   add = []
@@ -100,7 +103,7 @@ resource "kubernetes_cron_job_v1" "scanner" {
               effect   = "NoSchedule"
               key      = "kubernetes.io/arch"
               operator = "Equal"
-              value    = "amd64"
+              value    = var.pantheon_kubernetes_node_architecture
             }
           }
         }
