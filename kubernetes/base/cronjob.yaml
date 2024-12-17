@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scanner
+spec:
+  schedule: "@midnight"
+  timeZone: "Europe/Berlin"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      completions: 1
+      template:
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: pantheon-scanner-sa
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                  nodeSelectorTerms:
+                    - matchExpressions:
+                        - key: kubernetes.io/arch
+                          operator: In
+                          values:
+                            - amd64
+          tolerations:
+            - effect: NoSchedule
+              key: kubernetes.io/arch
+              operator: Equal
+              value: amd64
+          containers:
+            - name: scanner
+              image: pantheon-scanner
+              imagePullPolicy: Always
+              ports:
+                - name: health
+                  containerPort: 8080
+                  protocol: TCP
+              livenessProbe:
+                httpGet:
+                  path: /healthz
+                  port: health
+              readinessProbe:
+                httpGet:
+                  path: /readyz
+                  port: health
+              resources:
+                limits:
+                  cpu: "300m"
+                  memory: "300Mi"
+                requests:
+                  cpu: "10m"
+                  memory: "50Mi"
+              env:
+                - name: PANTHEON_NAMESPACE
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+              envFrom:
+                - configMapRef:
+                    name: pantheon-scanner-cm

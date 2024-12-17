@@ -12,7 +12,7 @@ resources:
   - clusterrole.yaml
   - serviceaccount.yaml
   - clusterrolebinding.yaml
-  - deployment.yaml
+  - cronjob.yaml
 
 images:
   - name: pantheon-scanner

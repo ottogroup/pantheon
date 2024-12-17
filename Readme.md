@@ -33,22 +33,22 @@ On folder level
 
 ```bash
 module "pantheon_gcp_folder_log_export" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.26"
-    destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
-    parent_resource_type = "folder"
-    parent_resource_id = "123456789"
-    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
+  source                   = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.26"
+  destination_uri          = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
+  parent_resource_type     = "folder"
+  parent_resource_id       = "123456789"
+  pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
 ```
 
 On organization level
 ```bash
 module "pantheon_gcp_org_log_export" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.26"
-    destination_uri = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
-    parent_resource_type = "organization"
-    parent_resource_id = "123456789"
-    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
+  source                   = "github.com/ottogroup/pantheon//terraform/modules/gcp-log-export?ref=v1.1.26"
+  destination_uri          = "pubsub.googleapis.com/projects/<PROJECT_ID>/topics/<TOPIC_NAME>"
+  parent_resource_type     = "organization"
+  parent_resource_id       = "123456789"
+  pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
 ```
 
@@ -67,10 +67,10 @@ On folder level
 
 ```bash
 module "pantheon_gcp_permission" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.1.26"
-    pantheon_engine_role_id = module.pantheon_gcp_org.output.pantheon_engine_role_id
-    folder_ids = ["123456789", "987654321"]
-    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
+  source                   = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.1.26"
+  pantheon_engine_role_id  = module.pantheon_gcp_org.output.pantheon_engine_role_id
+  folder_ids = ["123456789", "987654321"]
+  pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
 ```
 
@@ -78,10 +78,10 @@ On org level
 
 ```bash
 module "pantheon_gcp_permission" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.1.20"
-    pantheon_engine_role_id = module.pantheon_gcp_org.pantheon_engine_role_id
-    org_id = "123456789"
-    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
+  source                   = "github.com/ottogroup/pantheon//terraform/modules/gcp-permission?ref=v1.1.20"
+  pantheon_engine_role_id  = module.pantheon_gcp_org.pantheon_engine_role_id
+  org_id                   = "123456789"
+  pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
 }
 ```
 
@@ -89,9 +89,28 @@ module "pantheon_gcp_permission" {
 
 ```bash
 module "pantheon_gcp_billing" {
-    source = "github.com/ottogroup/pantheon//terraform/modules/gcp-billing?ref=v1.1.26"
-    billing_account_id = "00AA00-000AAA-00AA0A"
-    pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
+  source                   = "github.com/ottogroup/pantheon//terraform/modules/gcp-billing?ref=v1.1.26"
+  billing_account_id       = "00AA00-000AAA-00AA0A"
+  pantheon_service_account = "<SA_NAME>@<PROJECT_ID>.iam.gserviceaccount.com"
+}
+```
+
+## Kubernetes
+
+- kubernetes-scanner: Deploy kubernetes scanner agent
+
+### Module `kubernetes-scanner` usage
+
+
+```bash
+module "pantheon_kubernetes_scanner" {
+  source                                            = "github.com/ottogroup/pantheon//terraform/modules/kubernetes-scanner?ref=v1.1.26"
+  pantheon_kubernetes_scanner_image                 = "docker image url"
+  pantheon_kubernetes_cluster_asset_class           = "The asset class of the cluster"
+  pantheon_kubernetes_cluster_canonical_asset_type  = "The canonical asset type of the cluster"
+  pantheon_kubernetes_cluster_canonical_resource_id = "The canonical resource id of the cluster"
+  pantheon_kubernetes_cluster_service_id            = "The service id cluster"
+  pantheon_kubernetes_sink_message_broker           = "The sink message broker"
 }
 ```
 
