@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: pantheon-
+namespace: pantheon-scanner
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+resources:
+  - namespace.yaml
+  - clusterrole.yaml
+  - serviceaccount.yaml
+  - clusterrolebinding.yaml
+  - cronjob.yaml
+
+images:
+  - name: pantheon-scanner
+    newName: europe-west1-docker.pkg.dev/oghub-pantheon-tooling/public/scanner
+    newTag: latest

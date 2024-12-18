@@ -56,16 +56,16 @@ No modules.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 4 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 5 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 4 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 5 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.6.0 |
 
 ## Modules
 
@@ -84,6 +84,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_destination_uri"></a> [destination\_uri](#input\_destination\_uri) | The full qualified destination URI of the PubSub topic the logging sink should write to in the form 'pubsub.googleapis.com/projects/<PROJECT\_ID>/topics/<TOPIC\_NAME>'. Will be provided by the team. | `string` | n/a | yes |
+| <a name="input_pantheon_service_account"></a> [pantheon\_service\_account](#input\_pantheon\_service\_account) | The service account used to scan resources. Will be provided by the team. | `string` | n/a | yes |
 | <a name="input_parent_resource_id"></a> [parent\_resource\_id](#input\_parent\_resource\_id) | The folder resp. organization number, e.g. 123456789. Needs to be set by user. | `string` | n/a | yes |
 | <a name="input_parent_resource_type"></a> [parent\_resource\_type](#input\_parent\_resource\_type) | Either 'folder' or 'organization'. Needs to be set by user. | `string` | n/a | yes |
 
