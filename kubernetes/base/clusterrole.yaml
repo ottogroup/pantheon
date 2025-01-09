@@ -13,6 +13,15 @@ rules:
       - replicationcontrollers
       - nodes
       - configmaps
+      - endpoints
+      - events
+      - limitranges
+      - persistentvolumeclaims
+      - podtemplates
+      - resourcequotas
+      - serviceaccounts
+      - componentstatuses
+      - persistentvolumes
   - apiGroups: [ "rbac.authorization.k8s.io" ]
     verbs: ["watch", "list", "get"]
     resources:
@@ -32,10 +41,14 @@ rules:
       - daemonsets
       - deployments
       - statefulsets
+      - controllerrevisions
+      - networkpolicies
   - apiGroups: [ "networking.k8s.io" ]
     verbs: ["watch", "list", "get"]
     resources:
       - ingresses
+      - networkpolicies
+      - ingressclasses
   - apiGroups: [ "apps.openshift.io" ]
     verbs: ["watch", "list", "get"]
     resources:
@@ -89,6 +102,13 @@ rules:
       - serviceattachments
       - frontendconfigs
       - servicenetworkendpointgroups
+      - redirectservices
+      - dataplanev2encryption
+      - networkloggings
+      - remotenodes
+      - egressnatpolicies
+      - gkenetworkparamsets
+      - networks
   - apiGroups: [ "networking.istio.io" ]
     verbs: ["watch", "list", "get"]
     resources:
@@ -110,6 +130,144 @@ rules:
       - authorizationpolicies
       - peerauthentications
       - requestauthentications
+  - apiGroups: [ "storage.k8s.io" ] 
+    verbs: ["watch", "list", "get"]
+    resources:
+      - csistoragecapacities
+      - csidrivers
+      - csinodes
+      - storageclasses
+      - volumeattachments
+  - apiGroups: [ "snapshot.storage.k8s.io" ] 
+    verbs: ["watch", "list", "get"]
+    resources:
+      - volumesnapshots
+      - volumesnapshotclasses
+      - volumesnapshotcontents
+  - apiGroups: [ "scheduling.k8s.io" ] 
+    verbs: ["watch", "list", "get"]
+    resources:
+      - priorityclasses
+  - apiGroups: [ "cilium.io" ] 
+    verbs: ["watch", "list", "get"]
+    resources:
+      - ciliumexternalworkloads
+      - ciliumidentities
+      - ciliumnodes
+      - ciliumendpointslices
+      - ciliumendpoints
+      - ciliumlocalredirectpolicies
+  - apiGroups: [ "monitoring.googleapis.com" ] 
+    verbs: ["watch", "list", "get"]
+    resources:
+      - clusternodemonitorings
+      - clusterpodmonitorings
+      - clusterrules
+      - globalrules
+      - operatorconfigs
+      - podmonitorings
+      - rules
+  - apiGroups: [ "cloud.google.com" ] 
+    verbs: ["watch", "list", "get"]
+    resources:
+      - computeclasses
+      - backendconfigs
+  - apiGroups: [ "apiregistration.k8s.io" ] 
+    verbs: ["watch", "list", "get"]
+    resources:
+      - apiservices
+  - apiGroups: [ "flowcontrol.apiserver.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - flowschemas
+      - prioritylevelconfigurations
+  - apiGroups: [ "node.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - gcpresourceallowlists
+  - apiGroups: [ "warden.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - audits
+  - apiGroups: [ "admissionregistration.k8s.io"]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - mutatingwebhookconfigurations
+      - validatingadmissionpolicies
+      - validatingadmissionpolicybindings
+      - validatingwebhookconfigurations
+  - apiGroups: [ "metrics.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - pods
+      - nodes
+  - apiGroups: [ "autoscaling" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - horizontalpodautoscalers
+  - apiGroups: [ "autoscaling.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - multidimpodautoscalers
+      - verticalpodautoscalercheckpoints
+      - verticalpodautoscalers
+      - horizontalpodautoscalers
+  - apiGroups: [ "autoscaling.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - verticalpodautoscalercheckpoints
+      - verticalpodautoscalers
+      - horizontalpodautoscalers
+  - apiGroups: [ "coordination.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - leases
+  - apiGroups: [ "autoscaling.x-k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - provisioningrequests
+  - apiGroups: [ "policy" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - poddisruptionbudgets
+  - apiGroups: [ "nodemanagement.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - updateinfos
+  - apiGroups: [ "nodemanagement.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - updateinfos
+  - apiGroups: [ "hub.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - memberships
+  - apiGroups: [ "internal.autoscaling.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - capacityrequests
+  - apiGroups: [ "events.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - events
+  - apiGroups: [ "discovery.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - endpointslices
+  - apiGroups: [ "auto.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - allowlistedv2workloads
+      - allowlistedworkloads
+      - workloadallowlists
+  - apiGroups: [ "apiextensions.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - customresourcedefinitions
+  - apiGroups: [ "node.k8s.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - runtimeclasses
   - apiGroups:
       - certificates.k8s.io
     resources:
