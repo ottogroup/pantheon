@@ -99,8 +99,7 @@ module "pantheon_gcp_billing" {
 
 - kubernetes-scanner: Deploy kubernetes scanner agent
 
-### Module `kubernetes-scanner` usage
-
+### Terraform module `kubernetes-scanner` usage
 
 ```bash
 module "pantheon_kubernetes_scanner" {
@@ -113,6 +112,41 @@ module "pantheon_kubernetes_scanner" {
   pantheon_kubernetes_sink_message_broker           = "The sink message broker"
 }
 ```
+
+### kustomize usage
+
+dev.env
+```bash
+PANTHEON_CLUSTER_ASSET_CLASS="The asset class of the cluster"
+PANTHEON_CLUSTER_SERVICE_ID="The service id cluster"
+PANTHEON_CLUSTER_CANONICAL_ASSET_TYPE="The canonical asset type of the cluster"
+PANTHEON_CLUSTER_CANONICAL_RESOURCE_ID= "The canonical resource id of the cluster"
+PANTHEON_SINK_MESSAGE_BROKER="The sink message broker"
+```
+
+kustomization.yaml
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: pantheon-scanner-cm
+    namespace: pantheon-scanner
+    envs:
+      - dev.env
+
+resources:
+  - https://github.com/ottogroup/pantheon//kubernetes/base/?timeout=120&ref=main
+```
+
+If you want to disable the ingestion of a asset type, you can add the following a comma seperated list of ignored resource with schema "<service>/<version>/<method>", e.g.:
+```bash
+IGNORED_RESOURCES="networking.k8s.io/v1/ingresses,/v1/secrets"
+```
+**Note:** the service core is in kubernetes a empty string.
 
 ## Versioning
 

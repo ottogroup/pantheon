@@ -22,6 +22,7 @@ rules:
       - serviceaccounts
       - componentstatuses
       - persistentvolumes
+      - secrets
   - apiGroups: [ "rbac.authorization.k8s.io" ]
     verbs: ["watch", "list", "get"]
     resources:
