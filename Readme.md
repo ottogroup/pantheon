@@ -139,7 +139,7 @@ configMapGenerator:
       - dev.env
 
 resources:
-  - github.com/ottogroup/pantheon/kubernetes/base
+  - https://github.com/ottogroup/pantheon//kubernetes/base/?timeout=120&ref=main
 ```
 
 If you want to disable the ingestion of a asset type, you can add the following a comma seperated list of ignored resource with schema "<service>/<version>/<method>", e.g.:
