@@ -16,14 +16,22 @@ resource "kubernetes_cron_job_v1" "scanner" {
     successful_jobs_history_limit = 3
 
     job_template {
+      metadata {
+        name = "pantheon-scanner"
+      }
       spec {
         backoff_limit = 0
         completions   = 1
 
         template {
+          metadata {
+            labels = {
+              app = "pantheon-scanner"
+            }
+          }
           spec {
             restart_policy       = "OnFailure"
-            service_account_name = kubernetes_service_account_v1.pantheon_scanner.metadata.name
+            service_account_name = kubernetes_service_account_v1.pantheon_scanner.metadata[0].name
             affinity {
               node_affinity {
                 preferred_during_scheduling_ignored_during_execution {
@@ -46,7 +54,7 @@ resource "kubernetes_cron_job_v1" "scanner" {
 
               env_from {
                 config_map_ref {
-                  name = kubernetes_config_map_v1.pantheon_scanner_cm.metadata.name
+                  name = kubernetes_config_map_v1.pantheon_scanner_cm.metadata[0].name
                 }
               }
               port {
