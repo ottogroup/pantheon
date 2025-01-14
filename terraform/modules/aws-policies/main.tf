@@ -79,6 +79,18 @@ locals {
     Statement : local.pantheon_full_policy3_document["Statement"]
     Version : local.pantheon_full_policy3_document["Version"]
   }
+  // 4
+  pantheon_full_policy4_document = local.cf-document["Resources"]["PantheonFullPolicy3"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy4 = {
+    Statement : local.pantheon_full_policy4_document["Statement"]
+    Version : local.pantheon_full_policy4_document["Version"]
+  }
+  // 5
+  pantheon_full_policy5_document = local.cf-document["Resources"]["PantheonFullPolicy4"]["Properties"]["PolicyDocument"]
+  pantheon_full_policy5 = {
+    Statement : local.pantheon_full_policy5_document["Statement"]
+    Version : local.pantheon_full_policy5_document["Version"]
+  }
   // deny actions
   pantheon_deny_actions1 = {
     Statement : [
@@ -122,6 +134,28 @@ resource "aws_iam_policy" "pantheon_full_policy3" {
 resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy3_to_gcp_federation" {
   policy_arn = aws_iam_policy.pantheon_full_policy3.arn
   name       = "pantheon-has-full-access-3"
+  roles      = [aws_iam_role.gcp_federation.name]
+}
+// 4
+resource "aws_iam_policy" "pantheon_full_policy4" {
+  name   = "${var.pantheon_full_access_policy_name}4"
+  path   = "/"
+  policy = jsonencode(local.pantheon_full_policy3)
+}
+resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy4_to_gcp_federation" {
+  policy_arn = aws_iam_policy.pantheon_full_policy4.arn
+  name       = "pantheon-has-full-access-4"
+  roles      = [aws_iam_role.gcp_federation.name]
+}
+// 5
+resource "aws_iam_policy" "pantheon_full_policy5" {
+  name   = "${var.pantheon_full_access_policy_name}5"
+  path   = "/"
+  policy = jsonencode(local.pantheon_full_policy5)
+}
+resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy5_to_gcp_federation" {
+  policy_arn = aws_iam_policy.pantheon_full_policy5.arn
+  name       = "pantheon-has-full-access-5"
   roles      = [aws_iam_role.gcp_federation.name]
 }
 // deny actions
