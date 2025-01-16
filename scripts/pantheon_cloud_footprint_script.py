@@ -41,7 +41,7 @@ aws_totals = {
     "Lambda Functions": 0,
     "ECS Resources": 0,
     "ECR Images": 0,
-    "DynamoDB Instances": 0,
+    "DynamoDB Tables": 0,
     "RDS Instances": 0,
     "S3 Buckets": 0,
 }
@@ -62,6 +62,10 @@ def ignore_error(error_msg):
             "API is not enabled on project" in error_msg or
             "The project is not activated." in error_msg or
             "API has not been used in project" in error_msg or
+            "AWS was not able to validate the provided access credentials" in error_msg or
+            "The security token included in the request is invalid" in error_msg or
+            "Could not connect to the endpoint URL:" in error_msg or
+            "(AccessDeniedException) when calling" in error_msg or
             re.search(r"Apps instance \[(.*?)\] not found: Resource 'applications/(.+?)' was not found", error_msg)):
         return True
     return False
@@ -72,18 +76,20 @@ def count_lines(output):
     return len([l for l in splitlines if not filter_line(l)])
 
 def safe_call_to_json(command):
-    """Runs an AWS CLI command and returns the JSON output as a Python dictionary."""
+    """Runs a CLI command and returns the JSON output as a Python dictionary."""
     try:
         result = subprocess.run(command, capture_output=True, text=True, check=True, shell=True)
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
-        print(f"Error running command: {command}")
-        print(e.stderr)
-        return None
+        process_output = e.output+e.stderr+e.stdout
+        if ignore_error(process_output):
+            return ''
+        else:
+            print("Got unrecoverable error. This is most probably a bug. Please report this to the Pantheon developers:\n",e.output)
+            raise
     except json.JSONDecodeError as e:
-        print(f"Error decoding JSON: {command}")
-        print(e)
-        return None
+            print("Got unrecoverable error. This is most probably a bug. Please report this to the Pantheon developers:\n", e.output+e.stderr+e.stdout)
+            raise
 
 
 def safe_call_text(command):
@@ -184,7 +190,7 @@ def count_gcp_resources(regions, project):
     report_counts(project, counts)
     return counts
 
-def count_aws_resources(regions, account):
+def count_aws_resources(regions):
     """Counts the specified AWS resources across all regions."""
     resource_counts = {
         "EC2 Instances": 0,
@@ -194,19 +200,79 @@ def count_aws_resources(regions, account):
         "Lambda Functions": 0,
         "ECS Resources": 0,
         "ECR Images": 0,
-        "DynamoDB Instances": 0,
+        "DynamoDB Tables": 0,
         "RDS Instances": 0,
         "S3 Buckets": 0,
     }
 
+    # S3 Buckets (global resource, so just run only once)
+    s3_buckets = safe_call_to_json(f'aws s3api list-buckets --output json')
+    if s3_buckets and 'Buckets' in s3_buckets:
+        resource_counts["S3 Buckets"] += len(s3_buckets['Buckets'])
+        
     for region in regions:
-        print(f"Checking region: {region}")
-
         # EC2 Instances
         ec2_instances = safe_call_to_json(f'aws ec2 describe-instances --region {region} --output json')
         if ec2_instances and 'Reservations' in ec2_instances:
             for reservation in ec2_instances['Reservations']:
-                resource_counts["EC2 Instances"] += len(reservation['Instances'])
+                for instance in reservation['Instances']:
+                    if instance['State']['Name'] != 'terminated':
+                        resource_counts["EC2 Instances"] += 1        
+        
+        # Lightsail Instances
+        lightsail_instances = safe_call_to_json(f'aws lightsail get-instances --region {region} --output json')
+        if lightsail_instances and 'instances' in lightsail_instances:
+            resource_counts["Lightsail Instances"] += len(lightsail_instances["instances"])
+
+
+        # EKS Instances (clusters)
+        eks_clusters = safe_call_to_json(f'aws eks list-clusters --region {region} --output json')
+        if eks_clusters and 'clusters' in eks_clusters:
+            resource_counts["EKS Instances"] += len(eks_clusters['clusters'])
+
+
+        # ECS Container Instances
+        ecs_clusters = safe_call_to_json(f'aws ecs list-clusters --region {region} --output json')
+        if ecs_clusters and 'clusterArns' in ecs_clusters:
+            for cluster_arn in ecs_clusters['clusterArns']:
+                ecs_instances = safe_call_to_json(f'aws ecs list-container-instances --cluster {cluster_arn} --region {region} --output json')
+                if ecs_instances and 'containerInstanceArns' in ecs_instances:
+                    resource_counts["ECS Container Instances"] += len(ecs_instances['containerInstanceArns'])
+
+
+        # Lambda Functions
+        lambda_functions = safe_call_to_json(f'aws lambda list-functions --region {region} --output json')
+        if lambda_functions and 'Functions' in lambda_functions:
+            resource_counts["Lambda Functions"] += len(lambda_functions['Functions'])
+
+
+        # ECS Resources tasks
+        if ecs_clusters and 'clusterArns' in ecs_clusters:
+            for cluster_arn in ecs_clusters['clusterArns']:
+                ecs_tasks = safe_call_to_json(f'aws ecs list-tasks --cluster {cluster_arn} --region {region} --output json')
+                if ecs_tasks and 'taskArns' in ecs_tasks:
+                    resource_counts["ECS Resources"] += len(ecs_tasks['taskArns'])
+
+
+        # ECR Images
+        ecr_repos = safe_call_to_json(f'aws ecr describe-repositories --region {region} --output json')
+        if ecr_repos and 'repositories' in ecr_repos:
+            for repo in ecr_repos['repositories']:
+                ecr_images = safe_call_to_json(f'aws ecr describe-images --repository-name {repo["repositoryName"]} --region {region} --output json')
+                if ecr_images and 'imageDetails' in ecr_images:
+                    resource_counts["ECR Images"] += len(ecr_images['imageDetails'])
+
+
+        # DynamoDB Tables (tables)
+        dynamodb_tables = safe_call_to_json(f'aws dynamodb list-tables --region {region} --output json')
+        if dynamodb_tables and 'TableNames' in dynamodb_tables:
+            resource_counts["DynamoDB Tables"] += len(dynamodb_tables['TableNames'])
+
+
+        # RDS Instances
+        rds_instances = safe_call_to_json(f'aws rds describe-db-instances --region {region} --output json')
+        if rds_instances and 'DBInstances' in rds_instances:
+            resource_counts["RDS Instances"] += len(rds_instances['DBInstances'])
 
     return resource_counts
 
@@ -250,25 +316,21 @@ def scan_gcp():
 
 
 def scan_aws():
-    # accounts = args.aws_accounts
-    # if len(accounts) == 0:
-    #     print("Please provide a list of AWS account ids to scan")
-    #     exit()
-
     regions_output = safe_call_text("aws ec2 describe-regions --all-regions --output text --region eu-central-1 --query \"Regions[].{Name:RegionName}\"")
     regions = regions_output.splitlines()
 
-    print(f"Starting AWS resource scanning for {len(accounts)} accounts/s")
+    print(f"Starting AWS resource scanning")
     print("-----------------------------------")
-    # Aggregate resources for each account
-    for acc in accounts:
-        counts = count_aws_resources(regions, acc)
-        for resource, count in counts.items():
-            aws_totals[resource] += count
+   
+    counts = count_aws_resources(regions)
+    for resource, count in counts.items():
+        aws_totals[resource] += count
 
     # Print totals
-    print(f"Total AWS resource count in {len(accounts)} accounts/s")
+    print(f"Total AWS resource count")
     print("============")
+    for resource, total in aws_totals.items():
+        print(f"Total {resource}: {total}")
 
 def scan_github():
     orgs = args.github_orgs
