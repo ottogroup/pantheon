@@ -1,6 +1,7 @@
 import argparse
 import re
 import subprocess
+import json
 
 parser = argparse.ArgumentParser(description='GCP Footprint Scanner')
 parser.add_argument('-c', '--cloud', action='append', dest='clouds',
@@ -32,6 +33,19 @@ gcp_totals = {
     "GCS Buckets": 0
 }
 
+aws_totals = {
+    "EC2 Instances": 0,
+    "Lightsail Instances": 0,
+    "EKS Instances": 0,
+    "ECS Container Instances": 0,
+    "Lambda Functions": 0,
+    "ECS Resources": 0,
+    "ECR Images": 0,
+    "DynamoDB Instances": 0,
+    "RDS Instances": 0,
+    "S3 Buckets": 0,
+}
+
 github_totals = {
     "Repositories": 0,
 }
@@ -57,9 +71,23 @@ def count_lines(output):
     splitlines = output.splitlines()
     return len([l for l in splitlines if not filter_line(l)])
 
+def safe_call_to_json(command):
+    """Runs an AWS CLI command and returns the JSON output as a Python dictionary."""
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, check=True, shell=True)
+        return json.loads(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"Error running command: {command}")
+        print(e.stderr)
+        return None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {command}")
+        print(e)
+        return None
 
-# Function to safely execute gcloud commands and ignore some errors
-def safe_call(command):
+
+def safe_call_text(command):
+    """ Function to safely execute commands and ignore some errors. """
     try:
         output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, text=True)
         return output.strip()
@@ -71,35 +99,35 @@ def safe_call(command):
             raise
 
 
-# Function to safely execute gcloud commands and ignore SERVICE_DISABLED errors
 def count_call(command):
-    if args.debug_logging:
-        print(f"Executing command: {command}")
-    result = safe_call(command)
-    lines = count_lines(result)
-    if args.verbose_logging:
-        print(f"Got result: {result} with count {lines}")
-    return lines
+   """ Function to safely execute gcloud commands and ignore SERVICE_DISABLED errors """
+   if args.debug_logging:
+       print(f"Executing command: {command}")
+   result = safe_call_text(command)
+   lines = count_lines(result)
+   if args.verbose_logging:
+       print(f"Got result: {result} with count {lines}")
+   return lines
 
 
 def count_gcp_regional_resources(regions, project):
-    notebook_instances = 0
-    redis_instances = 0
-    dataflow_jobs = 0
+   notebook_instances = 0
+   redis_instances = 0
+   dataflow_jobs = 0
 
-    for region in regions:
-        notebook_instances += count_call(
-            f"gcloud --quiet notebooks instances list --project={project} --location={region} --format=\"value(name)\"")
-        redis_instances += count_call(
-            f"gcloud --quiet redis instances list --project={project} --region={region} --format=\"value(name)\"")
-        dataflow_jobs += count_call(
-            f"gcloud --quiet dataflow jobs list --project={project} --region={region} --format=\"value(id)\"")
+   for region in regions:
+       notebook_instances += count_call(
+           f"gcloud --quiet notebooks instances list --project={project} --location={region} --format=\"value(name)\"")
+       redis_instances += count_call(
+           f"gcloud --quiet redis instances list --project={project} --region={region} --format=\"value(name)\"")
+       dataflow_jobs += count_call(
+           f"gcloud --quiet dataflow jobs list --project={project} --region={region} --format=\"value(id)\"")
 
-    return {
-        "Notebook Instances": notebook_instances,
-        "Redis Instances": redis_instances,
-        "Dataflow Jobs": dataflow_jobs,
-    }
+   return {
+       "Notebook Instances": notebook_instances,
+       "Redis Instances": redis_instances,
+       "Dataflow Jobs": dataflow_jobs,
+   }
 
 def report_counts(aca, counts):
     print(f"Scanned resources for: {aca}")
@@ -129,7 +157,7 @@ def count_gcp_resources(regions, project):
     bigquery_datasets = count_call(f"bq ls -q --project_id={project}")
     gcs_buckets = count_call(f"gsutil -q ls -p {project}")
 
-    bigtable_tables_output = safe_call(f"gcloud --quiet bigtable instances list --project={project} --format=\"value(name)\"")
+    bigtable_tables_output = safe_call_text(f"gcloud --quiet bigtable instances list --project={project} --format=\"value(name)\"")
     bigtable_instances = count_lines(bigtable_tables_output)
     bigtable_tables = 0
     for instance in bigtable_tables_output.splitlines():
@@ -156,6 +184,32 @@ def count_gcp_resources(regions, project):
     report_counts(project, counts)
     return counts
 
+def count_aws_resources(regions, account):
+    """Counts the specified AWS resources across all regions."""
+    resource_counts = {
+        "EC2 Instances": 0,
+        "Lightsail Instances": 0,
+        "EKS Instances": 0,
+        "ECS Container Instances": 0,
+        "Lambda Functions": 0,
+        "ECS Resources": 0,
+        "ECR Images": 0,
+        "DynamoDB Instances": 0,
+        "RDS Instances": 0,
+        "S3 Buckets": 0,
+    }
+
+    for region in regions:
+        print(f"Checking region: {region}")
+
+        # EC2 Instances
+        ec2_instances = safe_call_to_json(f'aws ec2 describe-instances --region {region} --output json')
+        if ec2_instances and 'Reservations' in ec2_instances:
+            for reservation in ec2_instances['Reservations']:
+                resource_counts["EC2 Instances"] += len(reservation['Instances'])
+
+    return resource_counts
+
 def count_github_resources(org):
     repos = count_call(f"gh repo list {org} -L 10000 --no-archived")
 
@@ -169,14 +223,14 @@ def count_github_resources(org):
 def scan_gcp():
     projects = args.gcp_projects
     if not args.gcp_projects or len(projects) == 0:
-        projects_output = safe_call("gcloud --quiet projects list --format=\"value(projectId)\"")
+        projects_output = safe_call_text("gcloud --quiet projects list --format=\"value(projectId)\"")
         projects = projects_output.splitlines()
 
     if len(projects) == 0:
         print("No projects found.")
         exit()
 
-    regions_output = safe_call(
+    regions_output = safe_call_text(
         f"gcloud --quiet compute regions list --format=\"value(name)\" --project={projects[0]}")
     regions = regions_output.splitlines()
 
@@ -195,10 +249,31 @@ def scan_gcp():
         print(f"Total {resource}: {total}")
 
 
+def scan_aws():
+    # accounts = args.aws_accounts
+    # if len(accounts) == 0:
+    #     print("Please provide a list of AWS account ids to scan")
+    #     exit()
+
+    regions_output = safe_call_text("aws ec2 describe-regions --all-regions --output text --region eu-central-1 --query \"Regions[].{Name:RegionName}\"")
+    regions = regions_output.splitlines()
+
+    print(f"Starting AWS resource scanning for {len(accounts)} accounts/s")
+    print("-----------------------------------")
+    # Aggregate resources for each account
+    for acc in accounts:
+        counts = count_aws_resources(regions, acc)
+        for resource, count in counts.items():
+            aws_totals[resource] += count
+
+    # Print totals
+    print(f"Total AWS resource count in {len(accounts)} accounts/s")
+    print("============")
+
 def scan_github():
     orgs = args.github_orgs
     if not args.github_orgs or len(orgs) == 0:
-        orgs_output = safe_call("gh org list")
+        orgs_output = safe_call_text("gh org list")
         orgs = orgs_output.splitlines()
 
     if len(orgs) == 0:
@@ -229,5 +304,7 @@ if len(args.clouds) == 0:
 
 if run_cloud_module("GCP"):
     scan_gcp()
+if run_cloud_module("AWS"):
+    scan_aws()
 if run_cloud_module("GitHub"):
     scan_github()
