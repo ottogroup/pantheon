@@ -14,7 +14,6 @@ rules:
       - nodes
       - configmaps
       - endpoints
-      - events
       - limitranges
       - persistentvolumeclaims
       - podtemplates
@@ -247,10 +246,6 @@ rules:
     verbs: ["watch", "list", "get"]
     resources:
       - capacityrequests
-  - apiGroups: [ "events.k8s.io" ]
-    verbs: ["watch", "list", "get"]
-    resources:
-      - events
   - apiGroups: [ "discovery.k8s.io" ]
     verbs: ["watch", "list", "get"]
     resources:
