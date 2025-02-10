@@ -17,3 +17,8 @@ variable "pantheon_service_account" {
   type        = string
   description = "The service account used to scan resources. Will be provided by the team."
 }
+
+variable "ignore_principal_emails" {
+  type        = list(string)
+  description = "Audit logs from these principal emails will be ignored."
+}
