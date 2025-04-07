@@ -4,6 +4,11 @@ metadata:
   name: scanner-cr
 rules:
   - apiGroups: [ "" ]
+    verbs: ["get"]
+    # access to kubelet configuration via node proxy endpoint
+    resources:
+      - nodes/proxy
+  - apiGroups: [ "" ]
     verbs: ["watch", "list", "get"]
     # a list of resource types to scan.
     resources:
