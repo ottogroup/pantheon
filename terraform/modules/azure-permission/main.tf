@@ -10,8 +10,8 @@ data "azurerm_subscription" "subscriptions" {
 
 data "azurerm_role_definition" "subscription_role" {
   for_each = toset(var.subscriptions)
-  name     = var.role
-  scope    = data.azurerm_subscription.subscriptions[each.key].id
+  name  = var.role
+  scope = data.azurerm_subscription.subscriptions[each.key].id
 }
 
 resource "azurerm_role_assignment" "pantheon_engine_security_admin" {
@@ -20,3 +20,22 @@ resource "azurerm_role_assignment" "pantheon_engine_security_admin" {
   role_definition_id = data.azurerm_role_definition.subscription_role[each.key].id
   principal_id       = data.azuread_service_principal.pantheon-engine.object_id
 }
+
+data "azurerm_management_group" "management_groups" {
+  for_each = toset(var.resource_groups)
+  name = each.key
+}
+
+data "azurerm_role_definition" "management_groups" {
+  for_each = toset(var.resource_groups)
+  name  = var.role
+  scope = data.azurerm_management_group.management_groups[each.key].id
+}
+
+resource "azurerm_role_assignment" "pantheon_engine_security_admin_management_groups" {
+  for_each = toset(var.subscriptions)
+  scope              = data.azurerm_management_group.management_groups[each.key].id
+  role_definition_id = data.azurerm_role_definition.management_groups[each.key].id
+  principal_id       = data.azuread_service_principal.pantheon-engine.object_id
+}
+
