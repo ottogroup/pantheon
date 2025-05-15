@@ -11,7 +11,7 @@ data "azurerm_subscription" "subscriptions" {
 data "azurerm_role_definition" "subscription_role" {
   for_each = toset(var.subscriptions)
   name     = var.role
-  scope    = each.value
+  scope    = data.azurerm_subscription[each.key].primary.id
 }
 
 resource "azurerm_role_assignment" "pantheon_engine_security_admin" {
