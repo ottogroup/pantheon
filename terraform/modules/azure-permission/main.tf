@@ -33,7 +33,7 @@ data "azurerm_role_definition" "management_groups" {
 }
 
 resource "azurerm_role_assignment" "pantheon_engine_security_admin_management_groups" {
-  for_each = toset(var.subscriptions)
+  for_each = toset(var.resource_groups)
   scope              = data.azurerm_management_group.management_groups[each.key].id
   role_definition_id = data.azurerm_role_definition.management_groups[each.key].id
   principal_id       = data.azuread_service_principal.pantheon-engine.object_id
