@@ -9,7 +9,7 @@ data "azurerm_subscription" "subscriptions" {
 
 
 data "azurerm_role_definition" "subscription_role" {
-  for_each = var.subscriptions
+  for_each = toset(var.subscriptions)
   name     = var.role
   scope    = each.value
 }
