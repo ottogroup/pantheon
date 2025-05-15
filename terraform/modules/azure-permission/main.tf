@@ -22,18 +22,18 @@ resource "azurerm_role_assignment" "pantheon_engine_security_admin" {
 }
 
 data "azurerm_management_group" "management_groups" {
-  for_each = toset(var.resource_groups)
+  for_each = toset(var.management_groups)
   name = each.key
 }
 
 data "azurerm_role_definition" "management_groups" {
-  for_each = toset(var.resource_groups)
+  for_each = toset(var.management_groups)
   name  = var.role
   scope = data.azurerm_management_group.management_groups[each.key].id
 }
 
 resource "azurerm_role_assignment" "pantheon_engine_security_admin_management_groups" {
-  for_each = toset(var.resource_groups)
+  for_each = toset(var.management_groups)
   scope              = data.azurerm_management_group.management_groups[each.key].id
   role_definition_id = data.azurerm_role_definition.management_groups[each.key].id
   principal_id       = data.azuread_service_principal.pantheon-engine.object_id
