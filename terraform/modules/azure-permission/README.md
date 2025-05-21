@@ -26,11 +26,11 @@ This Terraform module assigns the necessary permissions to an Azure Service Prin
 ```hcl
 module "azure_permission" {
   source                     = "./modules/azure-permission"
-  pantheon_service_principal = "<client_id>"
-  role                       = "Security Reader"
-  subscriptions              = ["<subscription_id>"]
-  resource_groups            = ["<resource_group_name>"]
-  management_groups          = ["<management_group_id>"]
+  pantheon_service_principal = "<CLIENT_ID>"
+  role                       = "<READER_ROLE>"
+  subscriptions              = ["<SUBSCRIPTION_ID>"]
+  resource_groups            = ["<RESOURCE_GROUP_NAME>"]
+  management_groups          = ["<MANAGEMENT_GROUP_ID>"]
 }
 ```
 
@@ -54,7 +54,7 @@ provider "azurerm" {
 module "azure_permission_sub1" {
   source                     = "../modules/azure-permission"
   providers                  = { azurerm = azurerm.sub1 }
-  role                       = "Security Reader"
+  role                       = "<READER_ROLE>"
   resource_groups            = ["ResourceGroup1"]
   pantheon_service_principal = "<SERVICE_PRINCIPAL_ID>"
 }
@@ -62,7 +62,7 @@ module "azure_permission_sub1" {
 module "azure_permission_sub2" {
   source                     = "../modules/azure-permission"
   providers                  = { azurerm = azurerm.sub2 }
-  role                       = "Security Reader"
+  role                       = "<READER_ROLE>"
   resource_groups            = ["ResourceGroup2"]
   pantheon_service_principal = "<SERVICE_PRINCIPAL_ID>"
 }
@@ -72,7 +72,7 @@ module "azure_permission_sub2" {
 - Role assignment at the subscription level
 - Role assignment at the management group level
 - Role assignment at the resource group level
-- Assignment of the Directory Reader role in Azure AD (enables listing users and groups)
+- Assignment of Reader role in Azure AD (enables listing users and groups)
 
 ## Notes
 - The Directory Reader role is required for the service principal to list users and groups in Azure AD.
