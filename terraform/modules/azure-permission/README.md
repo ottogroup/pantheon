@@ -1,14 +1,13 @@
 # Azure Permission Terraform Module
 
-This Terraform module assigns the necessary permissions to an Azure Service Principal (e.g., Pantheon) to operate at the subscription, management group, and Azure AD level. It supports role assignments on subscriptions, management groups, resource groups, and in Azure Active Directory (e.g., Directory Reader for listing users and groups).
+This Terraform module assigns the necessary permissions to an Azure Service Principal (e.g., Pantheon) to operate at the subscription, management group, and resource group level. It supports role assignments on subscriptions, management groups, and resource groups.
 
 ## Features
 - Assign any Azure role at the subscription, management group, or resource group level
-- Assign the Directory Reader role in Azure AD
 
 ## Requirements
 - Terraform >= 1.0
-- Providers: `azurerm` >= 3.0.0, `azuread`
+- Providers: `azurerm` >= 3.0.0
 - Sufficient permissions to assign roles
 
 ## Input Variables
@@ -72,8 +71,6 @@ module "azure_permission_sub2" {
 - Role assignment at the subscription level
 - Role assignment at the management group level
 - Role assignment at the resource group level
-- Assignment of Reader role in Azure AD (enables listing users and groups)
 
 ## Notes
-- The Directory Reader role is required for the service principal to list users and groups in Azure AD.
 - All role assignments are optional; if you leave a variable empty, no assignment is created for that scope.
