@@ -1,9 +1,9 @@
 # Azure Entra Permission Terraform Module
 
-This Terraform module assigns a directory role (e.g., Directory Reader) to an Azure Service Principal in Microsoft Entra ID (Azure AD). It is typically used to grant permissions such as listing users and groups.
+This Terraform module assigns a directory role (e.g., Directory Readers) to an Azure Service Principal in Microsoft Entra ID (Azure AD). It is typically used to grant permissions such as listing users and groups.
 
 ## Features
-- Assign any Azure AD directory role (e.g., Directory Reader) to a service principal
+- Assign any Azure AD directory role (e.g., Directory Readers) to a service principal
 
 ## Requirements
 - Terraform >= 1.0
