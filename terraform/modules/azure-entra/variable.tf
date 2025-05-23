@@ -6,5 +6,5 @@ variable "pantheon_service_principal" {
 variable "role" {
   description = "The role to be assigned to the service account"
   type        = string
-  default     = "Security Reader"
+  default     = "Directory Readers"
 }

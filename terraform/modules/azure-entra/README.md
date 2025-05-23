@@ -15,7 +15,7 @@ This Terraform module assigns a directory role (e.g., Directory Reader) to an Az
 | Name                        | Description                                   | Type   | Default           |
 |-----------------------------|-----------------------------------------------|--------|-------------------|
 | pantheon_service_principal  | Client ID of the service principal            | string | -                 |
-| role                        | Azure AD directory role to assign             | string | "Security Reader" |
+| role                        | Azure AD directory role to assign             | string | "Directory Readers" |
 
 ## Example
 
