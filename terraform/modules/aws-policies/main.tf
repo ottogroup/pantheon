@@ -140,7 +140,7 @@ resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy3_to_gcp_federati
 resource "aws_iam_policy" "pantheon_full_policy4" {
   name   = "${var.pantheon_full_access_policy_name}4"
   path   = "/"
-  policy = jsonencode(local.pantheon_full_policy3)
+  policy = jsonencode(local.pantheon_full_policy4)
 }
 resource "aws_iam_policy_attachment" "attach_PantheonFullPolicy4_to_gcp_federation" {
   policy_arn = aws_iam_policy.pantheon_full_policy4.arn
