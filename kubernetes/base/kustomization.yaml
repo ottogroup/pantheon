@@ -15,6 +15,7 @@ resources:
   - clusterrole.yaml
   - serviceaccount.yaml
   - clusterrolebinding.yaml
+  - priorityclass.yaml
   - cronjob.yaml
 
 images:

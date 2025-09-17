@@ -29,7 +29,7 @@ resource "kubernetes_cluster_role_binding_v1" "pantheon_scanner_crb" {
 
 locals {
   role-document = yamldecode(file("${path.module}/../../../kubernetes/base/clusterrole.yaml"))
-  rules = local.role-document["rules"]
+  rules         = local.role-document["rules"]
 }
 
 resource "kubernetes_cluster_role_v1" "pantheon_scanner_cr" {
@@ -41,8 +41,16 @@ resource "kubernetes_cluster_role_v1" "pantheon_scanner_cr" {
     for_each = local.rules
     content {
       api_groups = rule.value["apiGroups"]
-      resources = rule.value["resources"]
-      verbs     = rule.value["verbs"]
+      resources  = rule.value["resources"]
+      verbs      = rule.value["verbs"]
     }
   }
+}
+
+resource "kubernetes_priority_class_v1" "pantheon-high-priority" {
+  metadata {
+    name = "pantheon-high-priority"
+  }
+  preemption_policy = "PreemptLowerPriority"
+  value             = 10000000
 }

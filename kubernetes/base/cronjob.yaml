@@ -7,13 +7,18 @@ spec:
   timeZone: "Europe/Berlin"
   concurrencyPolicy: Forbid
   jobTemplate:
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
     spec:
-      backoffLimit: 0
+      backoffLimit: 3
       completions: 1
+      parallelism: 1
       template:
         spec:
           restartPolicy: OnFailure
           serviceAccountName: pantheon-scanner-sa
+          priorityClassName: pantheon-high-priority
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
