@@ -20,18 +20,23 @@ resource "kubernetes_cron_job_v1" "scanner" {
         name = "pantheon-scanner"
       }
       spec {
-        backoff_limit = 0
+        backoff_limit = 3
         completions   = 1
+        parallelism   = 1
 
         template {
           metadata {
             labels = {
               app = "pantheon-scanner"
             }
+            annotations = {
+              "cluster-autoscaler.kubernetes.io/safe-to-evict" = "false"
+            }
           }
           spec {
             restart_policy       = "OnFailure"
             service_account_name = kubernetes_service_account_v1.pantheon_scanner.metadata[0].name
+            priority_class_name  = kubernetes_priority_class_v1.pantheon-high-priority.metadata[0].name
             affinity {
               node_affinity {
                 preferred_during_scheduling_ignored_during_execution {
@@ -40,7 +45,7 @@ resource "kubernetes_cron_job_v1" "scanner" {
                     match_expressions {
                       key      = "kubernetes.io/arch"
                       operator = "In"
-                      values = [var.pantheon_kubernetes_node_architecture]
+                      values   = [var.pantheon_kubernetes_node_architecture]
                     }
                   }
                 }
@@ -100,7 +105,7 @@ resource "kubernetes_cron_job_v1" "scanner" {
 
             security_context {
               supplemental_groups = []
-              run_as_non_root = false
+              run_as_non_root     = false
 
               seccomp_profile {
                 type = "RuntimeDefault"

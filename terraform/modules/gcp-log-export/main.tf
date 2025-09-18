@@ -7,7 +7,7 @@ locals {
   ignore_principals = join("\n  ",
     concat(
       ["AND NOT protoPayload.authenticationInfo.principalEmail=\"${var.pantheon_service_account}\""],
-      [for email in var.ignore_principal_emails : join("", ["AND NOT protoPayload.authenticationInfo.principalEmail=\"", email, "\""])]))
+  [for email in var.ignore_principal_emails : join("", ["AND NOT protoPayload.authenticationInfo.principalEmail=\"", email, "\""])]))
   filter = <<EOT
   logName:"/logs/cloudaudit.googleapis.com%2Factivity"
   AND NOT severity="ERROR"

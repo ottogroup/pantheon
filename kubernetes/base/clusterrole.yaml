@@ -54,6 +54,12 @@ rules:
       - ingresses
       - networkpolicies
       - ingressclasses
+      - ipaddresses
+      - servicecidrs
+  - apiGroups: [ "datalayer.gke.io" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - gcpdatasources
   - apiGroups: [ "apps.openshift.io" ]
     verbs: ["watch", "list", "get"]
     resources:
@@ -114,6 +120,7 @@ rules:
       - egressnatpolicies
       - gkenetworkparamsets
       - networks
+      - nodetopologies
   - apiGroups: [ "networking.istio.io" ]
     verbs: ["watch", "list", "get"]
     resources:
@@ -143,7 +150,7 @@ rules:
       - csinodes
       - storageclasses
       - volumeattachments
-  - apiGroups: [ "snapshot.storage.k8s.io" ] 
+  - apiGroups: [ "snapshot.storage.k8s.io" ]
     verbs: ["watch", "list", "get"]
     resources:
       - volumesnapshots
@@ -177,7 +184,13 @@ rules:
     resources:
       - computeclasses
       - backendconfigs
-  - apiGroups: [ "apiregistration.k8s.io" ] 
+  - apiGroups: [ "security.cloud.google.com" ]
+    verbs: ["watch", "list", "get"]
+    resources:
+      - gkeclustertrustbundles
+      - trustconfigs
+      - workloadcertificateconfigs
+  - apiGroups: [ "apiregistration.k8s.io" ]
     verbs: ["watch", "list", "get"]
     resources:
       - apiservices
@@ -261,6 +274,7 @@ rules:
       - allowlistedv2workloads
       - allowlistedworkloads
       - workloadallowlists
+      - allowlistsynchronizers
   - apiGroups: [ "apiextensions.k8s.io" ]
     verbs: ["watch", "list", "get"]
     resources:
