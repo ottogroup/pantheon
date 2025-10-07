@@ -73,6 +73,9 @@ module "pantheon-googleworkspace-role" {
 5. Result should be like on the image below - please note that Google Workspace Admin Console UI is changing frequently
    * ![google-workspace-pantheon-role.png](google-workspace-pantheon-role.png)
 
+> This module utilizes the archived Terraform module [Google Workspace](https://github.com/hashicorp/terraform-provider-googleworkspace). At present, there is no alternative available for managing roles in Google Workspace via Terraform.
+> Please let us know if there is other mature solution that we could incorporate.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
