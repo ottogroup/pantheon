@@ -2,7 +2,25 @@
 
 Provides IAM bindings on folder or organization level.
 
-This module is mandatory.
+This module is optional.
+
+Example usage
+```hcl
+
+# needed to prepare Pantheon VM Scanner role
+
+module "gcp-org" {
+  source          = "github.com/ottogroup/pantheon//terraform/modules/gcp-org?ref=VERSION"
+  org_id = "1234567890", # Organization1
+}
+
+module "gcp-o[]()rg" {
+  source          = "github.com/ottogroup/pantheon//terraform/modules/[]()gcp-org?ref=VERSION"
+  
+}
+
+
+```
 
 ## Requirements
 
@@ -48,27 +66,19 @@ No outputs.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 6, >= 7 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 7.0 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 6, >= 7 |
+No providers.
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_gcp-roles"></a> [gcp-roles](#module\_gcp-roles) | ./../gcp-roles | n/a |
+No modules.
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [google_folder_iam_member.folder_level_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_member) | resource |
-| [google_organization_iam_member.org_level_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
+No resources.
 
 ## Inputs
 
@@ -76,9 +86,9 @@ No outputs.
 |------|-------------|------|---------|:--------:|
 | <a name="input_folder_ids"></a> [folder\_ids](#input\_folder\_ids) | Optional: The ID of a folder you want to attach the permissions to. Per default, the permissions will be granted on the org level. The format for each element is folders/{folder\_id}. Needs to be set by user. | `list(string)` | `[]` | no |
 | <a name="input_org_id"></a> [org\_id](#input\_org\_id) | The ID of the organization that owns the resources that you want to scan. Needs to be set by user. | `string` | `null` | no |
-| <a name="input_pantheon_engine_role_id"></a> [pantheon\_engine\_role\_id](#input\_pantheon\_engine\_role\_id) | The ID of org level custom role of Pantheon Engine. Will be provided by output of gcp-org module. | `string` | n/a | yes |
 | <a name="input_pantheon_gcp_roles"></a> [pantheon\_gcp\_roles](#input\_pantheon\_gcp\_roles) | The roles that will be applied to all folders or the organization. The default are the recommended roles. | `list(string)` | `null` | no |
 | <a name="input_pantheon_service_account"></a> [pantheon\_service\_account](#input\_pantheon\_service\_account) | The service account used to scan resources. Will be provided by the team. | `string` | n/a | yes |
+| <a name="input_pantheon_vmscanner_role_id"></a> [pantheon\_vmscanner\_role\_id](#input\_pantheon\_vmscanner\_role\_id) | The ID of org level custom role of Pantheon VM Scanner. Will be provided by output of gcp-org module. | `string` | n/a | yes |
 
 ## Outputs
 

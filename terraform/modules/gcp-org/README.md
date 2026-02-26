@@ -43,14 +43,14 @@ No modules.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 5 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 6, >= 7 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 5 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 6, >= 7 |
 
 ## Modules
 
@@ -61,6 +61,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [google_organization_iam_custom_role.pantheon_engine_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_custom_role) | resource |
+| [google_organization_iam_custom_role.pantheon_vmscanner_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_custom_role) | resource |
 
 ## Inputs
 
@@ -73,4 +74,5 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_pantheon_engine_role_id"></a> [pantheon\_engine\_role\_id](#output\_pantheon\_engine\_role\_id) | The identifier of the created custom role with the format organizations/{{org\_id}}/roles/{{role\_id}}. |
+| <a name="output_pantheon_vmscanner_role_id"></a> [pantheon\_vmscanner\_role\_id](#output\_pantheon\_vmscanner\_role\_id) | The identifier of the created custom role with the format organizations/{{org\_id}}/roles/{{role\_id}}. |
 <!-- END_TF_DOCS -->
