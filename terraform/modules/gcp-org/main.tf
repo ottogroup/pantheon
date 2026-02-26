@@ -14,3 +14,14 @@ resource "google_organization_iam_custom_role" "pantheon_engine_permissions" {
     "clientauthconfig.clients.listWithSecrets",
   ]
 }
+
+resource "google_organization_iam_custom_role" "pantheon_vmscanner_permissions" {
+  org_id      = var.org_id
+  role_id     = "pantheon.vmscanner"
+  title       = "Pantheon VM Scanner"
+  description = "Permissions for Pantheon VM Scanner to be able scan VM snapshots and list instances."
+  permissions = [
+    "compute.snapshots.create",
+    "compute.instances.list"
+  ]
+}
