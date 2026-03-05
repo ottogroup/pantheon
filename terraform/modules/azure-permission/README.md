@@ -74,3 +74,50 @@ module "azure_permission_sub2" {
 
 ## Notes
 - All role assignments are optional; if you leave a variable empty, no assignment is created for that scope.
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | n/a |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_role_assignment.pantheon_engine_security_admin](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azurerm_role_assignment.pantheon_engine_security_admin_management_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azurerm_role_assignment.pantheon_engine_security_admin_resource_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azuread_service_principal.pantheon-service-principal](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/service_principal) | data source |
+| [azurerm_management_group.management_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/management_group) | data source |
+| [azurerm_resource_group.resource_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
+| [azurerm_role_definition.management_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/role_definition) | data source |
+| [azurerm_role_definition.resource_groups](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/role_definition) | data source |
+| [azurerm_role_definition.subscription_role](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/role_definition) | data source |
+| [azurerm_subscription.subscriptions](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_management_groups"></a> [management\_groups](#input\_management\_groups) | A list of specific resource IDs to which the IAM binding should be applied | `list(string)` | `[]` | no |
+| <a name="input_pantheon_service_principal"></a> [pantheon\_service\_principal](#input\_pantheon\_service\_principal) | The email address of the Google service account | `string` | n/a | yes |
+| <a name="input_resource_groups"></a> [resource\_groups](#input\_resource\_groups) | A list of resource group names to which the IAM binding should be applied | `list(string)` | `[]` | no |
+| <a name="input_role"></a> [role](#input\_role) | The role to be assigned to the service account | `string` | `"Security Reader"` | no |
+| <a name="input_subscriptions"></a> [subscriptions](#input\_subscriptions) | A list of subscription IDs to which the IAM binding should be applied | `list(string)` | `[]` | no |
+
+## Outputs
+
+No outputs.
+<!-- END_TF_DOCS -->

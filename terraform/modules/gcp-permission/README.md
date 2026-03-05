@@ -48,14 +48,14 @@ No outputs.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 5 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.7 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 6, >= 7 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >= 5 |
+| <a name="provider_google"></a> [google](#provider\_google) | >= 6, >= 7 |
 
 ## Modules
 
@@ -69,6 +69,7 @@ No outputs.
 |------|------|
 | [google_folder_iam_member.folder_level_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/folder_iam_member) | resource |
 | [google_organization_iam_member.org_level_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_member) | resource |
+| [google_project_iam_member.project_level_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) | resource |
 
 ## Inputs
 
@@ -79,6 +80,7 @@ No outputs.
 | <a name="input_pantheon_engine_role_id"></a> [pantheon\_engine\_role\_id](#input\_pantheon\_engine\_role\_id) | The ID of org level custom role of Pantheon Engine. Will be provided by output of gcp-org module. | `string` | n/a | yes |
 | <a name="input_pantheon_gcp_roles"></a> [pantheon\_gcp\_roles](#input\_pantheon\_gcp\_roles) | The roles that will be applied to all folders or the organization. The default are the recommended roles. | `list(string)` | `null` | no |
 | <a name="input_pantheon_service_account"></a> [pantheon\_service\_account](#input\_pantheon\_service\_account) | The service account used to scan resources. Will be provided by the team. | `string` | n/a | yes |
+| <a name="input_project_ids"></a> [project\_ids](#input\_project\_ids) | Optional: The ID of a project you want to attach the permissions to. Per default, the permissions will be granted on the org level. The format for each element is projects/{project\_id}. Needs to be set by user. | `list(string)` | `[]` | no |
 
 ## Outputs
 

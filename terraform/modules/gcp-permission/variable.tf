@@ -10,6 +10,12 @@ variable "folder_ids" {
   description = "Optional: The ID of a folder you want to attach the permissions to. Per default, the permissions will be granted on the org level. The format for each element is folders/{folder_id}. Needs to be set by user."
 }
 
+variable "project_ids" {
+  type        = list(string)
+  default     = []
+  description = "Optional: The ID of a project you want to attach the permissions to. Per default, the permissions will be granted on the org level. The format for each element is projects/{project_id}. Needs to be set by user."
+}
+
 variable "pantheon_engine_role_id" {
   type        = string
   description = "The ID of org level custom role of Pantheon Engine. Will be provided by output of gcp-org module."
@@ -23,5 +29,5 @@ variable "pantheon_service_account" {
 variable "pantheon_gcp_roles" {
   type        = list(string)
   default     = null
-  description = "The roles that will be applied to all folders or the organization. The default are the recommended roles."
+  description = "The roles that will be applied to all projects, folders or the organization. The default are the recommended roles."
 }
