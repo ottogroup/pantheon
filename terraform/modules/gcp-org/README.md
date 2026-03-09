@@ -61,6 +61,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [google_organization_iam_custom_role.pantheon_engine_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_custom_role) | resource |
+| [google_organization_iam_custom_role.pantheon_machine_scanning_permissions](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/organization_iam_custom_role) | resource |
 
 ## Inputs
 
@@ -73,4 +74,5 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_pantheon_engine_role_id"></a> [pantheon\_engine\_role\_id](#output\_pantheon\_engine\_role\_id) | The identifier of the created custom role with the format organizations/{{org\_id}}/roles/{{role\_id}}. |
+| <a name="output_pantheon_machine_scanning_role_id"></a> [pantheon\_machine\_scanning\_role\_id](#output\_pantheon\_machine\_scanning\_role\_id) | The identifier of the created custom role with the format organizations/{{org\_id}}/roles/{{role\_id}}. |
 <!-- END_TF_DOCS -->
