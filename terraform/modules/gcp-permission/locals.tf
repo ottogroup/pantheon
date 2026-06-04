@@ -15,7 +15,7 @@ locals {
       for role in var.pantheon_gcp_roles == null ? module.gcp-roles.necessary_gcp_roles : var.pantheon_gcp_roles : [
         for projectId in var.project_ids : {
           role      = role
-          projectId = folderId
+          projectId = projectId
         }
       ]
     ]
