@@ -74,6 +74,7 @@ resource "kubernetes_cron_job_v1" "scanner" {
                 }
               }
               readiness_probe {
+                initial_delay_seconds = 5
                 http_get {
                   path = "/readyz"
                   port = "health"
