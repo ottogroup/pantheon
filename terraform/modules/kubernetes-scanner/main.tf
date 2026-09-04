@@ -1,6 +1,6 @@
 resource "kubernetes_namespace_v1" "pantheon_scanner" {
   metadata {
-    name = "pantheon-scanner"
+    name = var.namespace
   }
 }
 

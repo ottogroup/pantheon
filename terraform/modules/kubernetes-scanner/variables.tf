@@ -21,7 +21,13 @@ variable "pantheon_kubernetes_cluster_service_id" {
 variable "pantheon_kubernetes_sink_message_broker" {
   description = "The sink message broker"
 }
+
 variable "pantheon_kubernetes_node_architecture" {
   description = "The target node architecture for the scanner"
   default     = "amd64"
+}
+
+variable "namespace" {
+  description = "The namespace in which the scanner will operate"
+  default     = "pantheon-scanner"
 }
